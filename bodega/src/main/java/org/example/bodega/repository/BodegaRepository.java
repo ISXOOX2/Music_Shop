@@ -1,6 +1,6 @@
-package com.example.Music_Shop.repository;
+package org.example.bodega.repository;
 
-import com.example.Music_Shop.model.Bodega;
+import org.example.bodega.model.Bodega;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

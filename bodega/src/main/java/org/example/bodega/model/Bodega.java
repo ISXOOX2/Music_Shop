@@ -1,4 +1,4 @@
-package com.example.Music_Shop.model;
+package org.example.bodega.model;     // ← package nuevo, no es el de Music_Shop
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -16,10 +16,11 @@ public class Bodega {
     @Column(name = "id_bodega", nullable = false)
     private Integer id;
 
+    // ⚠️ Importante: en microservicios NO se usa @ManyToOne hacia otro microservicio.
+    // En vez de relación JPA con Sucursal, guardás SOLO el id como Integer.
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "sucursal_id", nullable = false)
-    private Sucursal sucursal;
+    @Column(name = "sucursal_id", nullable = false)
+    private Integer sucursalId;
 
     @Size(max = 100)
     @NotNull
@@ -29,6 +30,4 @@ public class Bodega {
     @NotNull
     @Column(name = "capacidad_maxima", nullable = false)
     private Integer capacidadMaxima;
-
-
 }

@@ -1,11 +1,10 @@
-package com.example.Music_Shop.controller;
+package org.example.bodega.controller;
 
-import com.example.Music_Shop.model.Bodega;
-import com.example.Music_Shop.service.BodegaService;
+import org.example.bodega.model.Bodega;
+import org.example.bodega.service.BodegaService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 

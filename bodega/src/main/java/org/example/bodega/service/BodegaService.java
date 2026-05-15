@@ -1,7 +1,7 @@
-package com.example.Music_Shop.service;
+package org.example.bodega.service;
 
-import com.example.Music_Shop.model.Bodega;
-import com.example.Music_Shop.repository.BodegaRepository;
+import org.example.bodega.model.Bodega;
+import org.example.bodega.repository.BodegaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
