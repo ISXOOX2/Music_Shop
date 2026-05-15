@@ -1,15 +1,12 @@
-package com.example.Music_Shop.model;
+package com.example.Music_Shop.Model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -17,6 +14,7 @@ import java.time.LocalDate;
 @Table(name = "descuento")
 public class Descuento {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_descuento", nullable = false)
     private Integer id;
 
@@ -31,7 +29,7 @@ public class Descuento {
 
     @NotNull
     @Column(name = "fecha_expiracion", nullable = false)
-    private LocalDate fechaExpiracion;
+    private LocalDateTime fechaExpiracion;
 
 
 }

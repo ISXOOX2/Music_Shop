@@ -1,9 +1,6 @@
-package com.example.Music_Shop.model;
+package com.example.Music_Shop.Model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -17,8 +14,14 @@ import java.time.LocalDateTime;
 @Table(name = "pago")
 public class Pago {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_pago", nullable = false)
     private Integer id;
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "pedido_id", nullable = false)
+    private Pedido pedido;
 
     @NotNull
     @Column(name = "monto_pagado", nullable = false)

@@ -1,9 +1,6 @@
-package com.example.Music_Shop.model;
+package com.example.Music_Shop.Model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -15,11 +12,13 @@ import lombok.Setter;
 @Table(name = "proveedor")
 public class Proveedor {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_proveedor", nullable = false)
     private Integer id;
 
+    @Size(max = 12)
     @NotNull
-    @Column(name = "rut", nullable = false)
+    @Column(name = "rut", nullable = false, length = 12)
     private String rut;
 
     @Size(max = 200)
