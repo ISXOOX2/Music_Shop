@@ -1,0 +1,63 @@
+package com.example.Music_Shop.controller;
+
+import com.example.Music_Shop.model.Bodega;
+import com.example.Music_Shop.service.BodegaService;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/bodegas")
+public class BodegaController {
+
+    @Autowired
+    private BodegaService bodegaService;
+
+    @GetMapping
+    public List<Bodega> findAll(){
+        return bodegaService.findAll();
+    }
+    @GetMapping("/{id}")
+    public Bodega findById(@PathVariable Integer id){
+        return bodegaService.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Bodega con id " + id + " no encontrada"));
+    }
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Integer id){
+        if(!bodegaService.existsById(id)){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "Bodega con id " + id + " no encontrada");
+        }
+        bodegaService.delete(id);
+    }
+    @GetMapping("/exists/{id}")
+    public boolean existsById(@PathVariable Integer id){
+        return bodegaService.existsById(id);
+    }
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public Bodega create(@Valid @RequestBody Bodega bodega){
+        return bodegaService.save(bodega);
+    }
+    @PutMapping("/{id}")
+    public Bodega update(@PathVariable Integer id,
+                         @Valid @RequestBody Bodega bodega){
+        if(!bodegaService.existsById(id)){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "Bodega con id " + id + " no encontrada");
+        }
+        bodega.setId(id);
+        return bodegaService.save(bodega);
+    }
+
+}
+
+
