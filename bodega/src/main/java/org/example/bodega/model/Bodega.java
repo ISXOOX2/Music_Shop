@@ -16,8 +16,6 @@ public class Bodega {
     @Column(name = "id_bodega", nullable = false)
     private Integer id;
 
-    // ⚠️ Importante: en microservicios NO se usa @ManyToOne hacia otro microservicio.
-    // En vez de relación JPA con Sucursal, guardás SOLO el id como Integer.
     @NotNull
     @Column(name = "sucursal_id", nullable = false)
     private Integer sucursalId;
