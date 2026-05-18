@@ -1,4 +1,4 @@
-package com.example.Music_Shop.model;
+package org.example.empleado.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
