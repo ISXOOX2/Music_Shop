@@ -1,4 +1,4 @@
-package com.example.Music_Shop.model;
+package org.example.pago.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -19,9 +19,8 @@ public class Pago {
     private Integer id;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "pedido_id", nullable = false)
-    private Pedido pedido;
+    @Column(name = "pedido_id", nullable = false)
+    private Integer pedidoId;
 
     @NotNull
     @Column(name = "monto_pagado", nullable = false)
@@ -35,6 +34,4 @@ public class Pago {
     @NotNull
     @Column(name = "fecha_pago", nullable = false)
     private LocalDateTime fechaPago;
-
-
 }

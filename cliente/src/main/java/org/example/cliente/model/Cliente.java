@@ -35,6 +35,4 @@ public class Cliente {
     @NotNull
     @Column(name = "password_hash", nullable = false, length = 300)
     private String passwordHash;
-
-
 }

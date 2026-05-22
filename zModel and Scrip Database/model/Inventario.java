@@ -1,4 +1,4 @@
-package com.example.Music_Shop.model;
+package org.example.inventario.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -16,18 +16,14 @@ public class Inventario {
     private Integer id;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "producto_id", nullable = false)
-    private Producto producto;
+    @Column(name = "producto_id", nullable = false)
+    private Integer productoId;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "bodega_id", nullable = false)
-    private Bodega bodega;
+    @Column(name = "bodega_id", nullable = false)
+    private Integer bodegaId;
 
     @NotNull
     @Column(name = "cantidad", nullable = false)
     private Integer cantidad;
-
-
 }

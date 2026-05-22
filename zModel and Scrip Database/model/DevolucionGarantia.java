@@ -1,4 +1,4 @@
-package com.example.Music_Shop.model;
+package org.example.devolucion.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -17,9 +17,8 @@ public class DevolucionGarantia {
     private Integer id;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "pedido_id", nullable = false)
-    private Pedido pedido;
+    @Column(name = "pedido_id", nullable = false)
+    private Integer pedidoId;
 
     @Size(max = 50)
     @NotNull
@@ -35,6 +34,4 @@ public class DevolucionGarantia {
     @NotNull
     @Column(name = "estado_resolucion", nullable = false, length = 100)
     private String estadoResolucion;
-
-
 }
