@@ -1,10 +1,10 @@
-package org.example.devolucionGarantia;
+package org.example.pago;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class devolucionGarantiaApplicationTests {
+class PagoApplicationTests {
 
     @Test
     void contextLoads() {
