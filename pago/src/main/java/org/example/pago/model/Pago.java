@@ -17,12 +17,7 @@ public class Pago {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_pago", nullable = false)
     private Integer id;
-
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "pedido_id", nullable = false)
-    private Pedido pedido;
-
+    
     @NotNull
     @Column(name = "monto_pagado", nullable = false)
     private Integer montoPagado;

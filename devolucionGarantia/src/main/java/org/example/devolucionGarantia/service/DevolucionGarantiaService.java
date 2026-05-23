@@ -1,6 +1,6 @@
 package org.example.devolucionGarantia.service;
 
-import org.example.DevolucionGarantia.model.DevolucionGarantia;
+import org.example.devolucionGarantia.model.DevolucionGarantia;
 import org.example.devolucionGarantia.repository.DevolucionGarantiaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

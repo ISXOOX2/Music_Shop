@@ -1,7 +1,7 @@
 package org.example.devolucionGarantia.controller;
 
 import jakarta.validation.Valid;
-import org.example.DevolucionGarantia.model.DevolucionGarantia;
+import org.example.devolucionGarantia.model.DevolucionGarantia;
 import org.example.devolucionGarantia.service.DevolucionGarantiaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

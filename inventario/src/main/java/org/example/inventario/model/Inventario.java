@@ -16,16 +16,6 @@ public class Inventario {
     private Integer id;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "producto_id", nullable = false)
-    private Producto producto;
-
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "bodega_id", nullable = false)
-    private Bodega bodega;
-
-    @NotNull
     @Column(name = "cantidad", nullable = false)
     private Integer cantidad;
 

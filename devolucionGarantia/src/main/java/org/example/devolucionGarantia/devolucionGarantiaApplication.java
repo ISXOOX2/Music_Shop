@@ -1,13 +1,13 @@
-package org.example.inventario;
+package org.example.devolucionGarantia;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class InventarioApplication {
+public class devolucionGarantiaApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(InventarioApplication.class, args);
+        SpringApplication.run(devolucionGarantiaApplication.class, args);
     }
 
 }

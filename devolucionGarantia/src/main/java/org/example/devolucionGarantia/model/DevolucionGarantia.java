@@ -1,4 +1,4 @@
-package org.example.DevolucionGarantia.model;
+package org.example.devolucionGarantia.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -15,10 +15,6 @@ public class DevolucionGarantia {
     @Column(name = "id_devolucion_garantia", nullable = false)
     private Integer id;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "pedido_id", nullable = false)
-    private Pedido pedido;
 
     @Size(max = 50)
     @NotNull
