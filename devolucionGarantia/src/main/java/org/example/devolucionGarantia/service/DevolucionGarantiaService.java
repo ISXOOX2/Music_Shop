@@ -23,7 +23,7 @@ public class DevolucionGarantiaService {
     }
 
     public DevolucionGarantia save(DevolucionGarantia devolucionGarantia){
-        // Pequeña lógica de negocio: Si no mandan estado, se pone "EN REVISION" por defecto
+
         if (devolucionGarantia.getEstadoResolucion() == null || devolucionGarantia.getEstadoResolucion().isEmpty()) {
             devolucionGarantia.setEstadoResolucion("EN REVISION");
         }

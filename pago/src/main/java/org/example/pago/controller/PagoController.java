@@ -57,7 +57,7 @@ public class PagoController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
                     "Pago con id " + id + " no encontrado");
         }
-        pago.setId(id); // Asegura que no estemos sobreescribiendo otro pago
+        pago.setId(id); // Asegura que se este sobreescribiendo
         return pagoService.save(pago);
     }
 }

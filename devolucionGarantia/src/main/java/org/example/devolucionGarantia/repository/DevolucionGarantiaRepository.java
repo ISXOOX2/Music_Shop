@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface DevolucionGarantiaRepository extends JpaRepository<DevolucionGarantia, Integer> {
-    // Todos los métodos de la base de datos están listos gracias a JpaRepository
+
 }

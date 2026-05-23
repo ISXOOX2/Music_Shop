@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PedidoRepository extends JpaRepository<Pedido, Integer> {
-    // Vacío, tal como lo hizo Andy
+
 }

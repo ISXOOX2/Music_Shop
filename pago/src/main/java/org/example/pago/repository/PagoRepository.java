@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PagoRepository extends JpaRepository<Pago, Integer> {
-    // Al heredar de JpaRepository ya tenemos listos los métodos básicos de BD
+
 }

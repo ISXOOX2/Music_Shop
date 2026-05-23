@@ -45,7 +45,7 @@ public class DevolucionGarantiaController {
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED) // Mantenemos el código 201 exigido
+    @ResponseStatus(HttpStatus.CREATED)
     public DevolucionGarantia create(@Valid @RequestBody DevolucionGarantia devolucionGarantia){
         return devolucionGarantiaService.save(devolucionGarantia);
     }
@@ -57,7 +57,7 @@ public class DevolucionGarantiaController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
                     "Devolución o garantía con id " + id + " no encontrada");
         }
-        devolucionGarantia.setId(id); // Asegura actualizar el registro correcto
+        devolucionGarantia.setId(id); // Asegura actualizar registro correcto
         return devolucionGarantiaService.save(devolucionGarantia);
     }
 }

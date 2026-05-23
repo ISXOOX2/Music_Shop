@@ -24,7 +24,7 @@ public class PagoService {
     }
 
     public Pago save(Pago pago){
-        // Si no nos mandan la fecha de pago desde Postman, le ponemos la fecha y hora actual automáticamente
+
         if (pago.getFechaPago() == null) {
             pago.setFechaPago(LocalDateTime.now());
         }
