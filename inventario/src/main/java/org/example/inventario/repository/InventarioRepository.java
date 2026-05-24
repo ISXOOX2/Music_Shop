@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface InventarioRepository extends JpaRepository<Inventario, Integer> {
-    // Hereda de forma automática todos los métodos CRUD básicos
+
 }

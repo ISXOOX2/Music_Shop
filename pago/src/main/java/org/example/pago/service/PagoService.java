@@ -37,7 +37,7 @@ public class PagoService {
     public Pago save(PagoRequestDTO dto) {
         log.info("Iniciando procesamiento de pago para el Pedido ID: {}", dto.getPedidoId());
 
-        //COMUNICACIÓN INTER-MICROSERVICIOS
+        //Comunicacion entre mircoservicios
         log.info("Consultando al microservicio 'pedido-service' la existencia del pedido ID: {}", dto.getPedidoId());
         pedidoClient.obtenerPedidoPorId(dto.getPedidoId());
         log.info("Verificación exitosa: El pedido ID {} existe. Procediendo a registrar el pago.", dto.getPedidoId());

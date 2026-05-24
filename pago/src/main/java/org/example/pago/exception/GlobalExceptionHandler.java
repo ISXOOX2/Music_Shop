@@ -40,7 +40,7 @@ public class GlobalExceptionHandler {
         Map<String, Object> response = new HashMap<>();
         response.put("timestamp", LocalDateTime.now());
 
-        // Si el microservicio de Pedidos responde un 404 (Not Found)
+
         if (ex.status() == 404) {
             response.put("status", HttpStatus.NOT_FOUND.value());
             response.put("error", "Recurso No Encontrado");
