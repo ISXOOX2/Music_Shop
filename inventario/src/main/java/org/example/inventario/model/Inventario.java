@@ -16,14 +16,8 @@ public class Inventario {
     private Integer id;
 
     @NotNull
-    @Column(name = "producto_id", nullable = false)
-    private Integer productoId;
-
-    @NotNull
-    @Column(name = "bodega_id", nullable = false)
-    private Integer bodegaId;
-
-    @NotNull
     @Column(name = "cantidad", nullable = false)
     private Integer cantidad;
+
+
 }

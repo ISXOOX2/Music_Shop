@@ -1,9 +1,4 @@
-<<<<<<<< HEAD:zModel and Scrip Database/model/DevolucionGarantia.java
-package org.example.devolucion.model;
-
-========
-package org.example.DevolucionGarantia.model;
->>>>>>>> RamaIsa:devolucionGarantia/src/main/java/org/example/devolucionGarantia/model/DevolucionGarantia.java
+package org.example.devolucionGarantia.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -20,9 +15,6 @@ public class DevolucionGarantia {
     @Column(name = "id_devolucion_garantia", nullable = false)
     private Integer id;
 
-    @NotNull
-    @Column(name = "pedido_id", nullable = false)
-    private Integer pedidoId;
 
     @Size(max = 50)
     @NotNull
@@ -38,4 +30,6 @@ public class DevolucionGarantia {
     @NotNull
     @Column(name = "estado_resolucion", nullable = false, length = 100)
     private String estadoResolucion;
+
+
 }

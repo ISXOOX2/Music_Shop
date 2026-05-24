@@ -2,35 +2,43 @@ package org.example.inventario.service;
 
 import org.example.inventario.model.Inventario;
 import org.example.inventario.repository.InventarioRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Optional;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class InventarioService {
 
-    @Autowired
-    private InventarioRepository inventarioRepository;
+    private final InventarioRepository inventarioRepository;
 
-    public List<Inventario> findAll(){
-        return inventarioRepository.findAll();
+    public InventarioService(InventarioRepository inventarioRepository) {
+        this.inventarioRepository = inventarioRepository;
     }
 
-    public Optional<Inventario> findById(Integer id){
-        return inventarioRepository.findById(id);
+    // Obtener el stock actual de un producto
+    public Inventario obtenerPorId(Integer id) {
+        return inventarioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Producto no encontrado en el inventario con ID: " + id));
     }
 
-    public Inventario save(Inventario inventario){
+    // Reducir Stock (Llamado de Pedidos al comprar)
+    @Transactional
+    public Inventario reducirStock(Integer id, Integer cantidadAReducir) {
+        Inventario inventario = obtenerPorId(id);
+
+        if (inventario.getCantidad() < cantidadAReducir) {
+            throw new RuntimeException("Stock insuficiente. Cantidad disponible: " + inventario.getCantidad() + ", Solicitada: " + cantidadAReducir);
+        }
+
+        inventario.setCantidad(inventario.getCantidad() - cantidadAReducir);
         return inventarioRepository.save(inventario);
     }
 
-    public void delete(Integer id){
-        inventarioRepository.deleteById(id);
-    }
+    // Aumentar Stock (Llamado por Devoluciones/Garantías)
+    @Transactional
+    public Inventario aumentarStock(Integer id, Integer cantidadAAumentar) {
+        Inventario inventario = obtenerPorId(id);
 
-    public boolean existsById(Integer id){
-        return inventarioRepository.existsById(id);
+        inventario.setCantidad(inventario.getCantidad() + cantidadAAumentar);
+        return inventarioRepository.save(inventario);
     }
 }

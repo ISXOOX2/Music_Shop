@@ -5,25 +5,27 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
-
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "pedido")
 public class Pedido {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_pedido", nullable = false)
     private Integer id;
 
-    @NotNull
-    @Column(name = "cliente_id", nullable = false)
+    // Agregamos el enlace lógico con el microservicio de Clientes
+    @NotNull(message = "El ID del cliente es obligatorio para el flujo de negocio")
+    @Column(name = "id_cliente", nullable = false)
     private Integer clienteId;
-
-    @Column(name = "descuento_id")
-    private Integer descuentoId;
 
     @NotNull
     @Column(name = "fecha_emision", nullable = false)

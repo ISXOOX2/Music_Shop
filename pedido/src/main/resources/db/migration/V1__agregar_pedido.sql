@@ -1,7 +1,7 @@
 
 CREATE TABLE `pedido` (
                           `id_pedido` Integer AUTO_INCREMENT NOT NULL PRIMARY KEY,
-                          `cliente_id` Integer NOT NULL,
+                          `id_cliente` Integer NOT NULL,
                           `descuento_id` Integer DEFAULT NULL,
                           `fecha_emision` DATETIME NOT NULL,
                           `total_final` INTEGER NOT NULL,
