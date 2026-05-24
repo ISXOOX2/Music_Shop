@@ -23,7 +23,6 @@ import java.util.Optional;
 @Service
 public class PedidoService {
 
-    // Instancia de SLF4J exigida por la rúbrica
     private static final Logger log = LoggerFactory.getLogger(PedidoService.class);
 
     @Autowired

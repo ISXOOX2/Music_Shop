@@ -39,12 +39,12 @@ public class PedidoController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Pedido create(@Valid @RequestBody PedidoRequestDTO pedidoDTO){
-        // Acá usamos @Valid para que pase por el ControllerAdvice si algo sale mal
+
         return pedidoService.save(pedidoDTO);
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT) // 204 No Content es buena práctica para Delete
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Integer id){
         if(!pedidoService.existsById(id)){
             log.warn("Intento de eliminar un pedido inexistente con ID: {}", id);

@@ -17,7 +17,7 @@ public class GlobalExceptionHandler {
 
     private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
-    // Captura errores de validación de los DTOs (@NotNull, @Min, etc.)
+    // Captura errores de validación de los DTOs
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex) {
         log.error("Error de validación en la petición recibida");
@@ -28,7 +28,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
 
-    // Captura nuestros ResponseStatusException (como el 404 Not Found)
+    // Captura nuestros ResponseStatusException
     @ExceptionHandler(ResponseStatusException.class)
     public ResponseEntity<Map<String, String>> handleResponseStatusException(ResponseStatusException ex) {
         log.error("Excepción de estado HTTP: {}", ex.getReason());

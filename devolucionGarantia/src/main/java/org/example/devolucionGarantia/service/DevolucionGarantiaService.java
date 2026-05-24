@@ -1,40 +1,47 @@
 package org.example.devolucionGarantia.service;
 
+import org.example.devolucionGarantia.client.InventarioClient;
+import org.example.devolucionGarantia.client.PedidoClient;
 import org.example.devolucionGarantia.model.DevolucionGarantia;
 import org.example.devolucionGarantia.repository.DevolucionGarantiaRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Optional;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class DevolucionGarantiaService {
 
-    @Autowired
-    private DevolucionGarantiaRepository devolucionGarantiaRepository;
+    private final DevolucionGarantiaRepository repository;
+    private final PedidoClient pedidoClient;
+    private final InventarioClient inventarioClient;
 
-    public List<DevolucionGarantia> findAll(){
-        return devolucionGarantiaRepository.findAll();
+    public DevolucionGarantiaService(DevolucionGarantiaRepository repository,
+                                     PedidoClient pedidoClient,
+                                     InventarioClient inventarioClient) {
+        this.repository = repository;
+        this.pedidoClient = pedidoClient;
+        this.inventarioClient = inventarioClient;
     }
 
-    public Optional<DevolucionGarantia> findById(Integer id){
-        return devolucionGarantiaRepository.findById(id);
-    }
+    @Transactional
+    public DevolucionGarantia registrarSolicitud(DevolucionGarantia solicitud, Integer idPedido, Integer idProducto, Integer cantidad) {
 
-    public DevolucionGarantia save(DevolucionGarantia devolucionGarantia){
+        // Validación remota
+        pedidoClient.obtenerPedidoPorId(idPedido);
 
-        if (devolucionGarantia.getEstadoResolucion() == null || devolucionGarantia.getEstadoResolucion().isEmpty()) {
-            devolucionGarantia.setEstadoResolucion("EN REVISION");
+        //Lógica de negocio local
+        solicitud.setEstadoResolucion("PROCESADA_Y_ACEPTADA");
+        DevolucionGarantia guardada = repository.save(solicitud);
+
+        //Impacto remoto
+        if ("DEVOLUCION".equalsIgnoreCase(solicitud.getTipoSolicitud())) {
+            inventarioClient.aumentarStock(idProducto, cantidad);
         }
-        return devolucionGarantiaRepository.save(devolucionGarantia);
+
+        return guardada;
     }
 
-    public void delete(Integer id){
-        devolucionGarantiaRepository.deleteById(id);
-    }
-
-    public boolean existsById(Integer id){
-        return devolucionGarantiaRepository.existsById(id);
+    public DevolucionGarantia obtenerPorId(Integer id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Registro de devolución/garantía no encontrado con ID: " + id));
     }
 }

@@ -22,7 +22,7 @@ public class PagoService {
     private PagoRepository pagoRepository;
 
     @Autowired
-    private PedidoClient pedidoClient; // Inyectamos nuestro puente Feign Client
+    private PedidoClient pedidoClient;
 
     public List<Pago> findAll() {
         log.info("Obteniendo todos los registros de pagos");
@@ -37,14 +37,12 @@ public class PagoService {
     public Pago save(PagoRequestDTO dto) {
         log.info("Iniciando procesamiento de pago para el Pedido ID: {}", dto.getPedidoId());
 
-        // 🚨 COMUNICACIÓN INTER-MICROSERVICIOS (Exigencia de la Rúbrica)
-        // Llamamos al microservicio de pedidos vía Feign. Si el pedido no existe, Feign levantará un error (404)
-        // y nuestro GlobalExceptionHandler se encargará de reportarlo limpiamente.
+        //COMUNICACIÓN INTER-MICROSERVICIOS
         log.info("Consultando al microservicio 'pedido-service' la existencia del pedido ID: {}", dto.getPedidoId());
         pedidoClient.obtenerPedidoPorId(dto.getPedidoId());
         log.info("Verificación exitosa: El pedido ID {} existe. Procediendo a registrar el pago.", dto.getPedidoId());
 
-        // Si la llamada remota no falló, creamos el objeto Pago
+        //Creacion del pago
         Pago pago = new Pago();
         pago.setPedidoId(dto.getPedidoId());
         pago.setMontoPagado(dto.getMontoPagado());
