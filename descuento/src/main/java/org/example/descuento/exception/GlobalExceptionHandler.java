@@ -1,4 +1,4 @@
-package org.example.bodega.exception;
+package org.example.descuento.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

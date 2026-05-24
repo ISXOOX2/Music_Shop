@@ -3,12 +3,12 @@ package org.example.bodega.model;     // ← package nuevo, no es el de Music_Sh
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "bodega")
 public class Bodega {
