@@ -15,6 +15,11 @@
         <option value="$PROJECT_DIR$/Pedido/pom.xml" />
         <option value="$PROJECT_DIR$/pedido/pom.xml" />
         <option value="$PROJECT_DIR$/demo/pom.xml" />
+        <option value="$PROJECT_DIR$/cliente/pom.xml" />
+        <option value="$PROJECT_DIR$/descuento/pom.xml" />
+        <option value="$PROJECT_DIR$/producto/pom.xml" />
+        <option value="$PROJECT_DIR$/proveedor/pom.xml" />
+        <option value="$PROJECT_DIR$/sucursal/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">

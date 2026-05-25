@@ -1,0 +1,77 @@
+package org.example.bodega.controller;
+
+import org.example.bodega.model.Bodega;
+import org.example.bodega.service.BodegaService;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/bodegas")
+public class BodegaController {
+
+    @Autowired
+    private BodegaService bodegaService;
+
+    @GetMapping
+    public List<Bodega> findAll() {
+        return bodegaService.findAll();
+    }
+
+    @GetMapping("/{id}")
+    public Bodega findById(@PathVariable Integer id) {
+        return bodegaService.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Bodega con id " + id + " no encontrada"));
+    }
+
+    @GetMapping("/buscar/nombre")
+    public List<Bodega> findByNombre(@RequestParam String nombre) {
+        return bodegaService.findByNombre(nombre);
+    }
+
+    @GetMapping("/buscar/sucursal")
+    public List<Bodega> findBySucursalId(@RequestParam Integer sucursalId) {
+        return bodegaService.findBySucursalId(sucursalId);
+    }
+
+    @GetMapping("/exists/{id}")
+    public boolean existsById(@PathVariable Integer id) {
+        return bodegaService.existsById(id);
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public Bodega create(@Valid @RequestBody Bodega bodega) {
+        return bodegaService.save(bodega);
+    }
+
+    @PutMapping("/{id}")
+    public Bodega update(@PathVariable Integer id,
+                         @Valid @RequestBody Bodega bodega) {
+        if (!bodegaService.existsById(id)) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    "Bodega con id " + id + " no encontrada");
+        }
+        bodega.setId(id);
+        return bodegaService.save(bodega);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Integer id) {
+        if (!bodegaService.existsById(id)) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    "Bodega con id " + id + " no encontrada");
+        }
+        bodegaService.delete(id);
+    }
+}
+
