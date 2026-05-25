@@ -11,18 +11,9 @@
         <module name="devolucionGarantia" />
         <module name="inventario" />
         <module name="pago" />
+        <module name="ApiGateway" />
       </profile>
-      <profile name="Annotation profile for empleado" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="false">
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
-        </processorPath>
-        <module name="empleado" />
-      </profile>
-      <profile name="Annotation profile for bodega" enabled="true">
+      <profile name="Annotation profile for sucursal" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
@@ -30,6 +21,7 @@
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
         </processorPath>
         <module name="cliente" />
+        <module name="empleado" />
         <module name="sucursal" />
         <module name="descuento" />
         <module name="pedido" />
@@ -46,6 +38,7 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="ApiGateway" options="-parameters" />
       <module name="EurekaServer" options="-parameters" />
       <module name="Music_Shop" options="-parameters" />
       <module name="Music_Shop (1)" options="-parameters" />
