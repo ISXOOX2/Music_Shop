@@ -31,22 +31,22 @@ public class EmpleadoController {
     }
 
     @GetMapping("/buscar/nombre")
-    public List<Empleado> findByNombre(@RequestParam String nombre) {
-        return empleadoService.findByNombre(nombre);
+    public List<Empleado> findByNombreCompleto(@RequestParam String nombreCompleto) {
+        return empleadoService.findByNombreCompleto(nombreCompleto);
     }
 
-    @GetMapping("/buscar/sucursal")
-    public List<Empleado> findBySucursalId(@RequestParam Integer sucursalId) {
-        return empleadoService.findBySucursalId(sucursalId);
+    @GetMapping("/buscar/cargo")
+    public List<Empleado> findByCargo(@RequestParam String cargo) {
+        return empleadoService.findByCargo(cargo);
     }
 
-    @GetMapping("/buscar/cedula")
-    public Empleado findByCedula(@RequestParam String cedula) {
-        Empleado empleado = empleadoService.findByCedula(cedula);
+    @GetMapping("/buscar/rut")
+    public Empleado findByRut(@RequestParam String rut) {
+        Empleado empleado = empleadoService.findByRut(rut);
         if (empleado == null) {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND,
-                    "Empleado con cédula " + cedula + " no encontrado");
+                    "Empleado con rut " + rut + " no encontrado");
         }
         return empleado;
     }

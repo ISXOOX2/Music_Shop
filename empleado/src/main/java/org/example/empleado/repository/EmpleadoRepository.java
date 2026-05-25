@@ -9,9 +9,9 @@ import java.util.List;
 @Repository
 public interface EmpleadoRepository extends JpaRepository<Empleado, Integer> {
 
-    List<Empleado> findByNombreContainingIgnoreCase(String nombre);
+    List<Empleado> findByNombreCompletoContainingIgnoreCase(String nombreCompleto);
 
-    List<Empleado> findBySucursalId(Integer sucursalId);
+    List<Empleado> findByCargo(String cargo);
 
-    Empleado findByCedula(String cedula);
+    Empleado findByRut(String rut);
 }

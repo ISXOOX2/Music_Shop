@@ -22,12 +22,16 @@ public class ProveedorService {
         return proveedorRepository.findById(id);
     }
 
-    public List<Proveedor> findByNombre(String nombre) {
-        return proveedorRepository.findByNombreContainingIgnoreCase(nombre);
+    public List<Proveedor> findByRazonSocial(String razonSocial) {
+        return proveedorRepository.findByRazonSocialContainingIgnoreCase(razonSocial);
     }
 
-    public List<Proveedor> findByPais(String pais) {
-        return proveedorRepository.findByPais(pais);
+    public Proveedor findByRut(String rut) {
+        return proveedorRepository.findByRut(rut);
+    }
+
+    public Proveedor findByEmail(String email) {
+        return proveedorRepository.findByEmail(email);
     }
 
     public Proveedor save(Proveedor proveedor) {

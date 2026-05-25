@@ -30,14 +30,31 @@ public class ProveedorController {
                         "Proveedor con id " + id + " no encontrado"));
     }
 
-    @GetMapping("/buscar/nombre")
-    public List<Proveedor> findByNombre(@RequestParam String nombre) {
-        return proveedorService.findByNombre(nombre);
+    @GetMapping("/buscar/razonSocial")
+    public List<Proveedor> findByRazonSocial(@RequestParam String razonSocial) {
+        return proveedorService.findByRazonSocial(razonSocial);
     }
 
-    @GetMapping("/buscar/pais")
-    public List<Proveedor> findByPais(@RequestParam String pais) {
-        return proveedorService.findByPais(pais);
+    @GetMapping("/buscar/rut")
+    public Proveedor findByRut(@RequestParam String rut) {
+        Proveedor proveedor = proveedorService.findByRut(rut);
+        if (proveedor == null) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    "Proveedor con rut " + rut + " no encontrado");
+        }
+        return proveedor;
+    }
+
+    @GetMapping("/buscar/email")
+    public Proveedor findByEmail(@RequestParam String email) {
+        Proveedor proveedor = proveedorService.findByEmail(email);
+        if (proveedor == null) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    "Proveedor con email " + email + " no encontrado");
+        }
+        return proveedor;
     }
 
     @GetMapping("/exists/{id}")

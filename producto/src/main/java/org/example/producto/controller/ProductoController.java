@@ -35,14 +35,9 @@ public class ProductoController {
         return productoService.findByNombre(nombre);
     }
 
-    @GetMapping("/buscar/proveedor")
-    public List<Producto> findByProveedorId(@RequestParam Integer proveedorId) {
-        return productoService.findByProveedorId(proveedorId);
-    }
-
-    @GetMapping("/buscar/activos")
-    public List<Producto> findByActivo(@RequestParam Boolean activo) {
-        return productoService.findByActivo(activo);
+    @GetMapping("/buscar/formato")
+    public List<Producto> findByFormato(@RequestParam String formato) {
+        return productoService.findByFormato(formato);
     }
 
     @GetMapping("/exists/{id}")

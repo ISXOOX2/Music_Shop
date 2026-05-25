@@ -26,12 +26,8 @@ public class ProductoService {
         return productoRepository.findByNombreContainingIgnoreCase(nombre);
     }
 
-    public List<Producto> findByProveedorId(Integer proveedorId) {
-        return productoRepository.findByProveedorId(proveedorId);
-    }
-
-    public List<Producto> findByActivo(Boolean activo) {
-        return productoRepository.findByActivo(activo);
+    public List<Producto> findByFormato(String formato) {
+        return productoRepository.findByFormato(formato);
     }
 
     public Producto save(Producto producto) {

@@ -22,16 +22,16 @@ public class EmpleadoService {
         return empleadoRepository.findById(id);
     }
 
-    public List<Empleado> findByNombre(String nombre) {
-        return empleadoRepository.findByNombreContainingIgnoreCase(nombre);
+    public List<Empleado> findByNombreCompleto(String nombreCompleto) {
+        return empleadoRepository.findByNombreCompletoContainingIgnoreCase(nombreCompleto);
     }
 
-    public List<Empleado> findBySucursalId(Integer sucursalId) {
-        return empleadoRepository.findBySucursalId(sucursalId);
+    public List<Empleado> findByCargo(String cargo) {
+        return empleadoRepository.findByCargo(cargo);
     }
 
-    public Empleado findByCedula(String cedula) {
-        return empleadoRepository.findByCedula(cedula);
+    public Empleado findByRut(String rut) {
+        return empleadoRepository.findByRut(rut);
     }
 
     public Empleado save(Empleado empleado) {
