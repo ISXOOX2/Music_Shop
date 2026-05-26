@@ -30,13 +30,13 @@ public class BodegaController {
                         "Bodega con id " + id + " no encontrada"));
     }
 
-    @GetMapping("/buscar/nombre")
-    public List<Bodega> findByNombre(@RequestParam String nombre) {
+    @GetMapping("/buscar/{nombre}")
+    public List<Bodega> findByNombre(@PathVariable String nombre) {
         return bodegaService.findByNombre(nombre);
     }
 
-    @GetMapping("/buscar/sucursal")
-    public List<Bodega> findBySucursalId(@RequestParam Integer sucursalId) {
+    @GetMapping("/buscar/sucursal/{sucursalId}")
+    public List<Bodega> findBySucursalId(@PathVariable Integer sucursalId) {
         return bodegaService.findBySucursalId(sucursalId);
     }
 

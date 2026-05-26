@@ -30,8 +30,8 @@ public class SucursalController {
                         "Sucursal con id " + id + " no encontrada"));
     }
 
-    @GetMapping("/buscar/nombre")
-    public List<Sucursal> findByNombre(@RequestParam String nombre) {
+    @GetMapping("/buscar/{nombre}")
+    public List<Sucursal> findByNombre(@PathVariable String nombre) {
         return sucursalService.findByNombre(nombre);
     }
 
