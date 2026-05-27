@@ -1,23 +1,24 @@
 package org.example.pedido.service;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.example.pedido.dto.PedidoRequestDTO;
 import org.example.pedido.model.Pedido;
 import org.example.pedido.repository.PedidoRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-@Setter
-@Getter
+
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Service
@@ -52,12 +53,35 @@ public class PedidoService {
         log.info("Pedido creado exitosamente en la base de datos con ID: {}", guardado.getId());
         return guardado;
     }
+
+    //Método para actualizar
+    public Pedido actualizar(Integer id, PedidoRequestDTO dto) {
+        log.info("Iniciando actualización del pedido con ID: {}", id);
+
+        Pedido pedidoExistente = pedidoRepository.findById(id)
+                .orElseThrow(() -> {
+                    log.error("Error al actualizar: No se encontró el pedido con ID {}", id);
+                    return new ResponseStatusException(HttpStatus.NOT_FOUND, "Pedido no encontrado");
+                });
+
+        pedidoExistente.setClienteId(dto.getClienteId());
+        pedidoExistente.setTotalFinal(dto.getTotalFinal());
+        pedidoExistente.setEstadoPedido(dto.getEstadoPedido());
+
+
+        Pedido pedidoActualizado = pedidoRepository.save(pedidoExistente);
+        log.info("Pedido ID {} actualizado exitosamente a estado: {}", id, dto.getEstadoPedido());
+
+        return pedidoActualizado;
+    }
+
     public void delete(Integer id){
         log.info("Eliminando pedido con ID: {}", id);
         pedidoRepository.deleteById(id);
     }
 
     public boolean existsById(Integer id){
+        log.info("Verificando existencia del pedido con ID: {}", id);
         return pedidoRepository.existsById(id);
     }
 }

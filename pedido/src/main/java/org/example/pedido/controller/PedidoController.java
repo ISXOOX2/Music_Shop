@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -39,10 +40,17 @@ public class PedidoController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Pedido create(@Valid @RequestBody PedidoRequestDTO pedidoDTO){
-
         return pedidoService.save(pedidoDTO);
     }
 
+    //Para actualizar (PUT)
+    @PutMapping("/{id}")
+    public ResponseEntity<Pedido> actualizar(@PathVariable Integer id, @Valid @RequestBody PedidoRequestDTO request) {
+        Pedido pedidoActualizado = pedidoService.actualizar(id, request);
+        return ResponseEntity.ok(pedidoActualizado);
+    }
+
+    // ELIMINAR
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Integer id){
@@ -51,5 +59,11 @@ public class PedidoController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Pedido con id " + id + " no encontrado");
         }
         pedidoService.delete(id);
+    }
+
+    //Para verificar si existe (GET /exists/{id})
+    @GetMapping("/exists/{id}")
+    public ResponseEntity<Boolean> existe(@PathVariable Integer id) {
+        return ResponseEntity.ok(pedidoService.existsById(id));
     }
 }

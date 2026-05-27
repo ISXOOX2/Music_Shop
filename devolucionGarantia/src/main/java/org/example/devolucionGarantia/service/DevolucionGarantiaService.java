@@ -6,8 +6,12 @@ import org.example.devolucionGarantia.model.DevolucionGarantia;
 import org.example.devolucionGarantia.repository.DevolucionGarantiaRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
 
 @Service
 public class DevolucionGarantiaService {
@@ -26,6 +30,22 @@ public class DevolucionGarantiaService {
         this.inventarioClient = inventarioClient;
     }
 
+    // NUEVO: Listar todos
+    public List<DevolucionGarantia> listarTodos() {
+        log.info("Obteniendo todas las solicitudes de devolución o garantía");
+        return repository.findAll();
+    }
+
+    public DevolucionGarantia obtenerPorId(Integer id) {
+        log.info("Buscando solicitud de devolución/garantía con ID: {}", id);
+        return repository.findById(id)
+                .orElseThrow(() -> {
+                    log.error("Solicitud de devolución/garantía no encontrada con ID: {}", id);
+
+                    return new ResponseStatusException(HttpStatus.NOT_FOUND, "Registro no encontrado con ID: " + id);
+                });
+    }
+
     @Transactional
     public DevolucionGarantia registrarSolicitud(DevolucionGarantia solicitud,
                                                  Integer idPedido,
@@ -34,17 +54,14 @@ public class DevolucionGarantiaService {
         log.info("Iniciando registro de solicitud tipo '{}' para pedido ID: {}",
                 solicitud.getTipoSolicitud(), idPedido);
 
-        // Validación remota con microservicio pedido
         log.info("Validando existencia del pedido ID: {} en el microservicio de pedidos", idPedido);
         pedidoClient.obtenerPedidoPorId(idPedido);
         log.info("Pedido ID: {} validado correctamente", idPedido);
 
-        // Lógica de negocio local
         solicitud.setEstadoResolucion("PROCESADA_Y_ACEPTADA");
         DevolucionGarantia guardada = repository.save(solicitud);
         log.info("Solicitud guardada exitosamente con ID: {}", guardada.getId());
 
-        // Impacto remoto en inventario si es devolución
         if ("DEVOLUCION".equalsIgnoreCase(solicitud.getTipoSolicitud())) {
             log.info("Tipo DEVOLUCION detectado. Aumentando stock del producto ID: {} en cantidad: {}",
                     idProducto, cantidad);
@@ -57,12 +74,34 @@ public class DevolucionGarantiaService {
         return guardada;
     }
 
-    public DevolucionGarantia obtenerPorId(Integer id) {
-        log.info("Buscando solicitud de devolución/garantía con ID: {}", id);
-        return repository.findById(id)
+    //Actualizar
+    public DevolucionGarantia actualizar(Integer id, DevolucionGarantia solicitudActualizada) {
+        log.info("Iniciando actualización de solicitud con ID: {}", id);
+
+        DevolucionGarantia existente = repository.findById(id)
                 .orElseThrow(() -> {
-                    log.warn("Solicitud de devolución/garantía no encontrada con ID: {}", id);
-                    return new RuntimeException("Registro de devolución/garantía no encontrado con ID: " + id);
+                    log.error("Error al actualizar: No se encontró la solicitud ID {}", id);
+                    return new ResponseStatusException(HttpStatus.NOT_FOUND, "Solicitud no encontrada");
                 });
+
+        existente.setTipoSolicitud(solicitudActualizada.getTipoSolicitud());
+        existente.setEstadoResolucion(solicitudActualizada.getEstadoResolucion());
+
+        DevolucionGarantia guardada = repository.save(existente);
+        log.info("Solicitud ID {} actualizada exitosamente", id);
+
+        return guardada;
+    }
+
+    //Eliminar
+    public void eliminar(Integer id) {
+        log.info("Eliminando solicitud con ID: {}", id);
+        repository.deleteById(id);
+    }
+
+    //Verificar existencia
+    public boolean existePorId(Integer id) {
+        log.info("Verificando existencia de solicitud ID: {}", id);
+        return repository.existsById(id);
     }
 }

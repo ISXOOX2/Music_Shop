@@ -35,4 +35,24 @@ public class PagoController {
         Pago nuevoPago = pagoService.save(dto);
         return new ResponseEntity<>(nuevoPago, HttpStatus.CREATED);
     }
+
+    //Actualizar (PUT)
+    @PutMapping("/{id}")
+    public ResponseEntity<Pago> actualizar(@PathVariable Integer id, @Valid @RequestBody PagoRequestDTO request) {
+        Pago pagoActualizado = pagoService.actualizar(id, request);
+        return ResponseEntity.ok(pagoActualizado);
+    }
+
+    //Eliminar (DELETE)
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminar(@PathVariable Integer id) {
+        pagoService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    //Verificar si existe (GET /exists/{id})
+    @GetMapping("/exists/{id}")
+    public ResponseEntity<Boolean> existe(@PathVariable Integer id) {
+        return ResponseEntity.ok(pagoService.existePorId(id));
+    }
 }

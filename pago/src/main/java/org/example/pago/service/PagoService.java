@@ -55,6 +55,40 @@ public class PagoService {
         return guardado;
     }
 
+    //Metodo para actualizar
+    public Pago actualizar(Integer id, PagoRequestDTO dto) {
+        log.info("Iniciando actualización del pago con ID: {}", id);
+
+        // Buscar si el pago existe
+        Pago pagoExistente = pagoRepository.findById(id)
+                .orElseThrow(() -> {
+                    log.error("Error al actualizar: No se encontró el pago con ID {}", id);
+                    return new RuntimeException("Pago no encontrado");
+                });
+
+        //Si cambian el ID del pedido
+        if (!pagoExistente.getPedidoId().equals(dto.getPedidoId())) {
+            log.info("El ID del pedido cambió. Validando existencia del nuevo Pedido ID: {}", dto.getPedidoId());
+            pedidoClient.obtenerPedidoPorId(dto.getPedidoId());
+        }
+
+        //Actualizar los datos
+        pagoExistente.setPedidoId(dto.getPedidoId());
+        pagoExistente.setMontoPagado(dto.getMontoPagado());
+        pagoExistente.setMetodoPago(dto.getMetodoPago());
+
+        Pago pagoActualizado = pagoRepository.save(pagoExistente);
+        log.info("Pago ID {} actualizado exitosamente", id);
+
+        return pagoActualizado;
+    }
+
+    //Metodo para verificar si existe
+    public boolean existePorId(Integer id) {
+        log.info("Verificando si existe el pago con ID: {}", id);
+        return pagoRepository.existsById(id);
+    }
+
     public void delete(Integer id) {
         log.info("Eliminando registro de pago con ID: {}", id);
         pagoRepository.deleteById(id);

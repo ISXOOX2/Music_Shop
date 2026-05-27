@@ -4,8 +4,12 @@ import org.example.inventario.model.Inventario;
 import org.example.inventario.repository.InventarioRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
 
 @Service
 public class InventarioService {
@@ -18,12 +22,26 @@ public class InventarioService {
         this.inventarioRepository = inventarioRepository;
     }
 
+    //Listar todos
+    public List<Inventario> listarTodos() {
+        log.info("Obteniendo todos los registros de inventario");
+        return inventarioRepository.findAll();
+    }
+
+    //Crear inventario
+    public Inventario crear(Inventario inventario) {
+        log.info("Creando nuevo registro de inventario");
+        Inventario guardado = inventarioRepository.save(inventario);
+        log.info("Inventario creado exitosamente con ID: {}", guardado.getId());
+        return guardado;
+    }
+
     public Inventario obtenerPorId(Integer id) {
         log.info("Buscando registro de inventario con ID: {}", id);
         return inventarioRepository.findById(id)
                 .orElseThrow(() -> {
-                    log.warn("Producto no encontrado en inventario con ID: {}", id);
-                    return new RuntimeException("Producto no encontrado en el inventario con ID: " + id);
+                    log.error("Producto no encontrado en inventario con ID: {}", id);
+                    return new ResponseStatusException(HttpStatus.NOT_FOUND, "Registro de inventario no encontrado con ID: " + id);
                 });
     }
 
@@ -35,7 +53,8 @@ public class InventarioService {
         if (inventario.getCantidad() < cantidadAReducir) {
             log.error("Stock insuficiente para inventario ID: {}. Disponible: {}, Solicitado: {}",
                     id, inventario.getCantidad(), cantidadAReducir);
-            throw new RuntimeException("Stock insuficiente. Cantidad disponible: "
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Stock insuficiente. Cantidad disponible: "
                     + inventario.getCantidad() + ", Solicitada: " + cantidadAReducir);
         }
 
@@ -54,5 +73,17 @@ public class InventarioService {
         Inventario actualizado = inventarioRepository.save(inventario);
         log.info("Stock aumentado exitosamente. Inventario ID: {}, nuevo stock: {}", id, actualizado.getCantidad());
         return actualizado;
+    }
+
+    //Eliminar
+    public void eliminar(Integer id) {
+        log.info("Eliminando registro de inventario con ID: {}", id);
+        inventarioRepository.deleteById(id);
+    }
+
+    //Verificar existencia
+    public boolean existePorId(Integer id) {
+        log.info("Verificando existencia de inventario ID: {}", id);
+        return inventarioRepository.existsById(id);
     }
 }
