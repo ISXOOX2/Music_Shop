@@ -54,7 +54,7 @@ public class PedidoService {
         return guardado;
     }
 
-    //Método para actualizar
+    //Metodo para actualizar
     public Pedido actualizar(Integer id, PedidoRequestDTO dto) {
         log.info("Iniciando actualización del pedido con ID: {}", id);
 
