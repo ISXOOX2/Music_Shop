@@ -25,38 +25,63 @@ public class PagoService {
     private PedidoClient pedidoClient;
 
     public List<Pago> findAll() {
-        log.info("Obteniendo todos los registros de pagos");
-        return pagoRepository.findAll();
+        try {
+            log.info("Obteniendo todos los registros de pagos");
+            return pagoRepository.findAll();
+        } catch (Exception e) {
+            log.error("Error al obtener la lista de pagos: {}", e.getMessage());
+            throw new RuntimeException("No se pudo obtener la lista de pagos");
+        }
     }
 
     public Optional<Pago> findById(Integer id) {
-        log.info("Buscando pago con ID: {}", id);
-        return pagoRepository.findById(id);
+        try {
+            log.info("Buscando pago con ID: {}", id);
+            Optional<Pago> resultado = pagoRepository.findById(id);
+            if (resultado.isEmpty()) {
+                log.warn("No se encontró ningún pago con ID: {}", id);
+            }
+            return resultado;
+        } catch (Exception e) {
+            log.error("Error al buscar pago con ID {}: {}", id, e.getMessage());
+            throw new RuntimeException("Error al buscar el pago con ID: " + id);
+        }
     }
 
     public Pago save(PagoRequestDTO dto) {
-        log.info("Iniciando procesamiento de pago para el Pedido ID: {}", dto.getPedidoId());
+        try {
+            log.info("Iniciando procesamiento de pago para el Pedido ID: {}", dto.getPedidoId());
 
-        //Comunicacion entre mircoservicios
-        log.info("Consultando al microservicio 'pedido-service' la existencia del pedido ID: {}", dto.getPedidoId());
-        pedidoClient.obtenerPedidoPorId(dto.getPedidoId());
-        log.info("Verificación exitosa: El pedido ID {} existe. Procediendo a registrar el pago.", dto.getPedidoId());
+            log.info("Consultando existencia del pedido ID: {} en el microservicio de pedidos", dto.getPedidoId());
+            pedidoClient.obtenerPedidoPorId(dto.getPedidoId());
+            log.info("Pedido ID: {} verificado correctamente. Procediendo a registrar el pago.", dto.getPedidoId());
 
-        //Creacion del pago
-        Pago pago = new Pago();
-        pago.setPedidoId(dto.getPedidoId());
-        pago.setMontoPagado(dto.getMontoPagado());
-        pago.setMetodoPago(dto.getMetodoPago());
-        pago.setFechaPago(LocalDateTime.now());
+            Pago pago = new Pago();
+            pago.setPedidoId(dto.getPedidoId());
+            pago.setMontoPagado(dto.getMontoPagado());
+            pago.setMetodoPago(dto.getMetodoPago());
+            pago.setFechaPago(LocalDateTime.now());
 
-        Pago guardado = pagoRepository.save(pago);
-        log.info("Pago registrado exitosamente en la base de datos con ID: {}", guardado.getId());
-
-        return guardado;
+            Pago guardado = pagoRepository.save(pago);
+            log.info("Pago registrado exitosamente con ID: {}", guardado.getId());
+            return guardado;
+        } catch (RuntimeException e) {
+            log.error("Error de negocio al procesar pago para pedido ID {}: {}", dto.getPedidoId(), e.getMessage());
+            throw e;
+        } catch (Exception e) {
+            log.error("Error inesperado al procesar pago para pedido ID {}: {}", dto.getPedidoId(), e.getMessage());
+            throw new RuntimeException("No se pudo registrar el pago para el pedido ID: " + dto.getPedidoId());
+        }
     }
 
     public void delete(Integer id) {
-        log.info("Eliminando registro de pago con ID: {}", id);
-        pagoRepository.deleteById(id);
+        try {
+            log.warn("Eliminando registro de pago con ID: {}", id);
+            pagoRepository.deleteById(id);
+            log.info("Pago con ID: {} eliminado correctamente", id);
+        } catch (Exception e) {
+            log.error("Error al eliminar pago con ID {}: {}", id, e.getMessage());
+            throw new RuntimeException("No se pudo eliminar el pago con ID: " + id);
+        }
     }
 }

@@ -19,36 +19,74 @@ public class DescuentoService {
     private DescuentoRepository descuentoRepository;
 
     public List<Descuento> findAll() {
-        log.info("Obteniendo lista de todos los descuentos");
-        return descuentoRepository.findAll();
+        try {
+            log.info("Obteniendo lista de todos los descuentos");
+            return descuentoRepository.findAll();
+        } catch (Exception e) {
+            log.error("Error al obtener la lista de descuentos: {}", e.getMessage());
+            throw new RuntimeException("No se pudo obtener la lista de descuentos");
+        }
     }
 
     public Optional<Descuento> findById(Integer id) {
-        log.info("Buscando descuento con ID: {}", id);
-        return descuentoRepository.findById(id);
+        try {
+            log.info("Buscando descuento con ID: {}", id);
+            Optional<Descuento> resultado = descuentoRepository.findById(id);
+            if (resultado.isEmpty()) {
+                log.warn("No se encontró ningún descuento con ID: {}", id);
+            }
+            return resultado;
+        } catch (Exception e) {
+            log.error("Error al buscar descuento con ID {}: {}", id, e.getMessage());
+            throw new RuntimeException("Error al buscar el descuento con ID: " + id);
+        }
     }
 
     public Descuento findByCodigo(String codigo) {
-        log.info("Buscando descuento con código: {}", codigo);
-        return descuentoRepository.findByCodigo(codigo);
+        try {
+            log.info("Buscando descuento con código: {}", codigo);
+            Descuento resultado = descuentoRepository.findByCodigo(codigo);
+            if (resultado == null) {
+                log.warn("No se encontró ningún descuento con código: {}", codigo);
+            }
+            return resultado;
+        } catch (Exception e) {
+            log.error("Error al buscar descuento con código {}: {}", codigo, e.getMessage());
+            throw new RuntimeException("Error al buscar el descuento con código: " + codigo);
+        }
     }
 
     public List<Descuento> findByPorcentaje(Double porcentaje) {
-        log.info("Buscando descuentos con porcentaje: {}", porcentaje);
-        return descuentoRepository.findByPorcentaje(porcentaje);
+        try {
+            log.info("Buscando descuentos con porcentaje: {}", porcentaje);
+            return descuentoRepository.findByPorcentaje(porcentaje);
+        } catch (Exception e) {
+            log.error("Error al buscar descuentos con porcentaje {}: {}", porcentaje, e.getMessage());
+            throw new RuntimeException("Error al buscar descuentos con porcentaje: " + porcentaje);
+        }
     }
 
     public Descuento save(Descuento descuento) {
-        log.info("Guardando descuento con código: {}", descuento.getCodigo());
-        Descuento guardado = descuentoRepository.save(descuento);
-        log.info("Descuento guardado exitosamente con ID: {}", guardado.getId());
-        return guardado;
+        try {
+            log.info("Guardando descuento con código: {}", descuento.getCodigo());
+            Descuento guardado = descuentoRepository.save(descuento);
+            log.info("Descuento guardado exitosamente con ID: {}", guardado.getId());
+            return guardado;
+        } catch (Exception e) {
+            log.error("Error al guardar descuento con código '{}': {}", descuento.getCodigo(), e.getMessage());
+            throw new RuntimeException("No se pudo guardar el descuento con código: " + descuento.getCodigo());
+        }
     }
 
     public void delete(Integer id) {
-        log.warn("Eliminando descuento con ID: {}", id);
-        descuentoRepository.deleteById(id);
-        log.info("Descuento con ID: {} eliminado correctamente", id);
+        try {
+            log.warn("Eliminando descuento con ID: {}", id);
+            descuentoRepository.deleteById(id);
+            log.info("Descuento con ID: {} eliminado correctamente", id);
+        } catch (Exception e) {
+            log.error("Error al eliminar descuento con ID {}: {}", id, e.getMessage());
+            throw new RuntimeException("No se pudo eliminar el descuento con ID: " + id);
+        }
     }
 
     public boolean existsById(Integer id) {

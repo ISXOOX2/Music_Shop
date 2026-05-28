@@ -28,36 +28,61 @@ public class PedidoService {
     @Autowired
     private PedidoRepository pedidoRepository;
 
-    public List<Pedido> findAll(){
-        log.info("Obteniendo la lista de todos los pedidos");
-        return pedidoRepository.findAll();
+    public List<Pedido> findAll() {
+        try {
+            log.info("Obteniendo la lista de todos los pedidos");
+            return pedidoRepository.findAll();
+        } catch (Exception e) {
+            log.error("Error al obtener la lista de pedidos: {}", e.getMessage());
+            throw new RuntimeException("No se pudo obtener la lista de pedidos");
+        }
     }
 
-    public Optional<Pedido> findById(Integer id){
-        log.info("Buscando pedido con ID: {}", id);
-        return pedidoRepository.findById(id);
+    public Optional<Pedido> findById(Integer id) {
+        try {
+            log.info("Buscando pedido con ID: {}", id);
+            Optional<Pedido> resultado = pedidoRepository.findById(id);
+            if (resultado.isEmpty()) {
+                log.warn("No se encontró ningún pedido con ID: {}", id);
+            }
+            return resultado;
+        } catch (Exception e) {
+            log.error("Error al buscar pedido con ID {}: {}", id, e.getMessage());
+            throw new RuntimeException("Error al buscar el pedido con ID: " + id);
+        }
     }
 
-    public Pedido save(PedidoRequestDTO dto){
-        log.info("Iniciando la creación de un nuevo pedido para el cliente ID: {}", dto.getClienteId());
+    public Pedido save(PedidoRequestDTO dto) {
+        try {
+            log.info("Iniciando la creación de un nuevo pedido para el cliente ID: {}", dto.getClienteId());
 
-        Pedido pedido = new Pedido();
-        pedido.setClienteId(dto.getClienteId());
-        pedido.setTotalFinal(dto.getTotalFinal());
-        pedido.setEstadoPedido(dto.getEstadoPedido());
-        pedido.setFechaEmision(LocalDateTime.now());
+            Pedido pedido = new Pedido();
+            pedido.setClienteId(dto.getClienteId());
+            pedido.setTotalFinal(dto.getTotalFinal());
+            pedido.setEstadoPedido(dto.getEstadoPedido());
+            pedido.setFechaEmision(LocalDateTime.now());
 
-        Pedido guardado = pedidoRepository.save(pedido);
-
-        log.info("Pedido creado exitosamente en la base de datos con ID: {}", guardado.getId());
-        return guardado;
+            Pedido guardado = pedidoRepository.save(pedido);
+            log.info("Pedido creado exitosamente con ID: {}", guardado.getId());
+            return guardado;
+        } catch (Exception e) {
+            log.error("Error al crear pedido para cliente ID {}: {}", dto.getClienteId(), e.getMessage());
+            throw new RuntimeException("No se pudo crear el pedido para el cliente ID: " + dto.getClienteId());
+        }
     }
-    public void delete(Integer id){
-        log.info("Eliminando pedido con ID: {}", id);
-        pedidoRepository.deleteById(id);
+
+    public void delete(Integer id) {
+        try {
+            log.warn("Eliminando pedido con ID: {}", id);
+            pedidoRepository.deleteById(id);
+            log.info("Pedido con ID: {} eliminado correctamente", id);
+        } catch (Exception e) {
+            log.error("Error al eliminar pedido con ID {}: {}", id, e.getMessage());
+            throw new RuntimeException("No se pudo eliminar el pedido con ID: " + id);
+        }
     }
 
-    public boolean existsById(Integer id){
+    public boolean existsById(Integer id) {
         return pedidoRepository.existsById(id);
     }
 }

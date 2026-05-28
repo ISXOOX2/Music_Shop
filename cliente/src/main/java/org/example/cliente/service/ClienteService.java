@@ -19,41 +19,88 @@ public class ClienteService {
     private ClienteRepository clienteRepository;
 
     public List<Cliente> findAll() {
-        log.info("Obteniendo lista de todos los clientes");
-        return clienteRepository.findAll();
+        try {
+            log.info("Obteniendo lista de todos los clientes");
+            return clienteRepository.findAll();
+        } catch (Exception e) {
+            log.error("Error al obtener la lista de clientes: {}", e.getMessage());
+            throw new RuntimeException("No se pudo obtener la lista de clientes");
+        }
     }
 
     public Optional<Cliente> findById(Integer id) {
-        log.info("Buscando cliente con ID: {}", id);
-        return clienteRepository.findById(id);
+        try {
+            log.info("Buscando cliente con ID: {}", id);
+            Optional<Cliente> resultado = clienteRepository.findById(id);
+            if (resultado.isEmpty()) {
+                log.warn("No se encontró ningún cliente con ID: {}", id);
+            }
+            return resultado;
+        } catch (Exception e) {
+            log.error("Error al buscar cliente con ID {}: {}", id, e.getMessage());
+            throw new RuntimeException("Error al buscar el cliente con ID: " + id);
+        }
     }
 
     public List<Cliente> findByNombre(String nombre) {
-        log.info("Buscando clientes con nombre que contenga: {}", nombre);
-        return clienteRepository.findByNombreCompletoContainingIgnoreCase(nombre);
+        try {
+            log.info("Buscando clientes con nombre que contenga: {}", nombre);
+            return clienteRepository.findByNombreCompletoContainingIgnoreCase(nombre);
+        } catch (Exception e) {
+            log.error("Error al buscar clientes por nombre '{}': {}", nombre, e.getMessage());
+            throw new RuntimeException("Error al buscar clientes por nombre: " + nombre);
+        }
     }
 
     public Cliente findByRut(String rut) {
-        log.info("Buscando cliente con RUT: {}", rut);
-        return clienteRepository.findByRut(rut);
+        try {
+            log.info("Buscando cliente con RUT: {}", rut);
+            Cliente resultado = clienteRepository.findByRut(rut);
+            if (resultado == null) {
+                log.warn("No se encontró ningún cliente con RUT: {}", rut);
+            }
+            return resultado;
+        } catch (Exception e) {
+            log.error("Error al buscar cliente con RUT {}: {}", rut, e.getMessage());
+            throw new RuntimeException("Error al buscar el cliente con RUT: " + rut);
+        }
     }
 
     public Cliente findByEmail(String email) {
-        log.info("Buscando cliente con email: {}", email);
-        return clienteRepository.findByEmail(email);
+        try {
+            log.info("Buscando cliente con email: {}", email);
+            Cliente resultado = clienteRepository.findByEmail(email);
+            if (resultado == null) {
+                log.warn("No se encontró ningún cliente con email: {}", email);
+            }
+            return resultado;
+        } catch (Exception e) {
+            log.error("Error al buscar cliente con email {}: {}", email, e.getMessage());
+            throw new RuntimeException("Error al buscar el cliente con email: " + email);
+        }
     }
 
     public Cliente save(Cliente cliente) {
-        log.info("Guardando cliente: {}", cliente.getNombreCompleto());
-        Cliente guardado = clienteRepository.save(cliente);
-        log.info("Cliente guardado exitosamente con ID: {}", guardado.getId());
-        return guardado;
+        try {
+            log.info("Guardando cliente: {}", cliente.getNombreCompleto());
+            Cliente guardado = clienteRepository.save(cliente);
+            log.info("Cliente guardado exitosamente con ID: {}", guardado.getId());
+            return guardado;
+        } catch (Exception e) {
+            log.error("Error al guardar cliente '{}': {}", cliente.getNombreCompleto(), e.getMessage());
+            throw new RuntimeException("No se pudo guardar el cliente: " + cliente.getNombreCompleto());
+        }
     }
 
     public void delete(Integer id) {
-        log.warn("Eliminando cliente con ID: {}", id);
-        clienteRepository.deleteById(id);
-        log.info("Cliente con ID: {} eliminado correctamente", id);
+        try {
+            log.warn("Eliminando cliente con ID: {}", id);
+            clienteRepository.deleteById(id);
+            log.info("Cliente con ID: {} eliminado correctamente", id);
+        } catch (Exception e) {
+            log.error("Error al eliminar cliente con ID {}: {}", id, e.getMessage());
+            throw new RuntimeException("No se pudo eliminar el cliente con ID: " + id);
+        }
     }
 
     public boolean existsById(Integer id) {

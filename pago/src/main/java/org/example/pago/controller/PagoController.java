@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -34,5 +35,16 @@ public class PagoController {
     public ResponseEntity<Pago> create(@Valid @RequestBody PagoRequestDTO dto) {
         Pago nuevoPago = pagoService.save(dto);
         return new ResponseEntity<>(nuevoPago, HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Integer id) {
+        if (pagoService.findById(id).isEmpty()) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    "Pago con id " + id + " no encontrado");
+        }
+        pagoService.delete(id);
     }
 }

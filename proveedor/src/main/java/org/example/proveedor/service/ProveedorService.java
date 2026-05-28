@@ -19,41 +19,88 @@ public class ProveedorService {
     private ProveedorRepository proveedorRepository;
 
     public List<Proveedor> findAll() {
-        log.info("Obteniendo lista de todos los proveedores");
-        return proveedorRepository.findAll();
+        try {
+            log.info("Obteniendo lista de todos los proveedores");
+            return proveedorRepository.findAll();
+        } catch (Exception e) {
+            log.error("Error al obtener la lista de proveedores: {}", e.getMessage());
+            throw new RuntimeException("No se pudo obtener la lista de proveedores");
+        }
     }
 
     public Optional<Proveedor> findById(Integer id) {
-        log.info("Buscando proveedor con ID: {}", id);
-        return proveedorRepository.findById(id);
+        try {
+            log.info("Buscando proveedor con ID: {}", id);
+            Optional<Proveedor> resultado = proveedorRepository.findById(id);
+            if (resultado.isEmpty()) {
+                log.warn("No se encontró ningún proveedor con ID: {}", id);
+            }
+            return resultado;
+        } catch (Exception e) {
+            log.error("Error al buscar proveedor con ID {}: {}", id, e.getMessage());
+            throw new RuntimeException("Error al buscar el proveedor con ID: " + id);
+        }
     }
 
     public List<Proveedor> findByRazonSocial(String razonSocial) {
-        log.info("Buscando proveedores con razón social que contenga: {}", razonSocial);
-        return proveedorRepository.findByRazonSocialContainingIgnoreCase(razonSocial);
+        try {
+            log.info("Buscando proveedores con razón social que contenga: {}", razonSocial);
+            return proveedorRepository.findByRazonSocialContainingIgnoreCase(razonSocial);
+        } catch (Exception e) {
+            log.error("Error al buscar proveedores por razón social '{}': {}", razonSocial, e.getMessage());
+            throw new RuntimeException("Error al buscar proveedores por razón social: " + razonSocial);
+        }
     }
 
     public Proveedor findByRut(String rut) {
-        log.info("Buscando proveedor con RUT: {}", rut);
-        return proveedorRepository.findByRut(rut);
+        try {
+            log.info("Buscando proveedor con RUT: {}", rut);
+            Proveedor resultado = proveedorRepository.findByRut(rut);
+            if (resultado == null) {
+                log.warn("No se encontró ningún proveedor con RUT: {}", rut);
+            }
+            return resultado;
+        } catch (Exception e) {
+            log.error("Error al buscar proveedor con RUT {}: {}", rut, e.getMessage());
+            throw new RuntimeException("Error al buscar el proveedor con RUT: " + rut);
+        }
     }
 
     public Proveedor findByEmail(String email) {
-        log.info("Buscando proveedor con email: {}", email);
-        return proveedorRepository.findByEmail(email);
+        try {
+            log.info("Buscando proveedor con email: {}", email);
+            Proveedor resultado = proveedorRepository.findByEmail(email);
+            if (resultado == null) {
+                log.warn("No se encontró ningún proveedor con email: {}", email);
+            }
+            return resultado;
+        } catch (Exception e) {
+            log.error("Error al buscar proveedor con email {}: {}", email, e.getMessage());
+            throw new RuntimeException("Error al buscar el proveedor con email: " + email);
+        }
     }
 
     public Proveedor save(Proveedor proveedor) {
-        log.info("Guardando proveedor: {}", proveedor.getRazonSocial());
-        Proveedor guardado = proveedorRepository.save(proveedor);
-        log.info("Proveedor guardado exitosamente con ID: {}", guardado.getId());
-        return guardado;
+        try {
+            log.info("Guardando proveedor: {}", proveedor.getRazonSocial());
+            Proveedor guardado = proveedorRepository.save(proveedor);
+            log.info("Proveedor guardado exitosamente con ID: {}", guardado.getId());
+            return guardado;
+        } catch (Exception e) {
+            log.error("Error al guardar proveedor '{}': {}", proveedor.getRazonSocial(), e.getMessage());
+            throw new RuntimeException("No se pudo guardar el proveedor: " + proveedor.getRazonSocial());
+        }
     }
 
     public void delete(Integer id) {
-        log.warn("Eliminando proveedor con ID: {}", id);
-        proveedorRepository.deleteById(id);
-        log.info("Proveedor con ID: {} eliminado correctamente", id);
+        try {
+            log.warn("Eliminando proveedor con ID: {}", id);
+            proveedorRepository.deleteById(id);
+            log.info("Proveedor con ID: {} eliminado correctamente", id);
+        } catch (Exception e) {
+            log.error("Error al eliminar proveedor con ID {}: {}", id, e.getMessage());
+            throw new RuntimeException("No se pudo eliminar el proveedor con ID: " + id);
+        }
     }
 
     public boolean existsById(Integer id) {
