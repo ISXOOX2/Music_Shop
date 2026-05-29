@@ -1,5 +1,6 @@
 package org.example.empleado.controller;
 
+import org.example.empleado.dto.EmpleadoRequestDTO;
 import org.example.empleado.model.Empleado;
 import org.example.empleado.service.EmpleadoService;
 import jakarta.validation.Valid;
@@ -56,22 +57,23 @@ public class EmpleadoController {
         return empleadoService.existsById(id);
     }
 
+    //Recibe el DTO y se lo pasa al Service
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Empleado create(@Valid @RequestBody Empleado empleado) {
-        return empleadoService.save(empleado);
+    public Empleado create(@Valid @RequestBody EmpleadoRequestDTO dto) {
+        return empleadoService.save(dto);
     }
 
+    //Recibe el DTO y el ID
     @PutMapping("/{id}")
     public Empleado update(@PathVariable Integer id,
-                           @Valid @RequestBody Empleado empleado) {
+                           @Valid @RequestBody EmpleadoRequestDTO dto) {
         if (!empleadoService.existsById(id)) {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND,
                     "Empleado con id " + id + " no encontrado");
         }
-        empleado.setId(id);
-        return empleadoService.save(empleado);
+        return empleadoService.update(id, dto);
     }
 
     @DeleteMapping("/{id}")

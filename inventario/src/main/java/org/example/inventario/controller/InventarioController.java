@@ -1,6 +1,7 @@
 package org.example.inventario.controller;
 
 import jakarta.validation.Valid;
+import org.example.inventario.dto.InventarioRequestDTO;
 import org.example.inventario.model.Inventario;
 import org.example.inventario.service.InventarioService;
 import org.slf4j.Logger;
@@ -23,43 +24,37 @@ public class InventarioController {
         this.inventarioService = inventarioService;
     }
 
-    //Para listar todos (GET)
     @GetMapping
     public ResponseEntity<List<Inventario>> listarTodos() {
         return ResponseEntity.ok(inventarioService.listarTodos());
     }
 
-    //Buscar stock de un producto por ID (GET)
     @GetMapping("/{id}")
     public ResponseEntity<Inventario> obtenerStock(@PathVariable Integer id) {
         return ResponseEntity.ok(inventarioService.obtenerPorId(id));
     }
 
-    //Para verificar si existe (GET)
     @GetMapping("/exists/{id}")
     public ResponseEntity<Boolean> existe(@PathVariable Integer id) {
         return ResponseEntity.ok(inventarioService.existePorId(id));
     }
 
-    //Para crear (POST)
+    //Recibe InventarioRequestDTO
     @PostMapping
-    public ResponseEntity<Inventario> crear(@Valid @RequestBody Inventario request) {
+    public ResponseEntity<Inventario> crear(@Valid @RequestBody InventarioRequestDTO request) {
         return new ResponseEntity<>(inventarioService.crear(request), HttpStatus.CREATED);
     }
 
-    //Reducir el stock de un producto (PUT)
     @PutMapping("/{id}/reducir")
     public ResponseEntity<Inventario> reducirStock(@PathVariable Integer id, @RequestParam Integer cantidad) {
         return ResponseEntity.ok(inventarioService.reducirStock(id, cantidad));
     }
 
-    //Aumentar el stock de un producto en caso de devoluciones(PUT)
     @PutMapping("/{id}/aumentar")
     public ResponseEntity<Inventario> aumentarStock(@PathVariable Integer id, @RequestParam Integer cantidad) {
         return ResponseEntity.ok(inventarioService.aumentarStock(id, cantidad));
     }
 
-    //Para eliminar (DELETE)
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable Integer id) {
         if (!inventarioService.existePorId(id)) {

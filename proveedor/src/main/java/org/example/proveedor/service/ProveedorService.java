@@ -1,5 +1,6 @@
 package org.example.proveedor.service;
 
+import org.example.proveedor.dto.ProveedorRequestDTO;
 import org.example.proveedor.model.Proveedor;
 import org.example.proveedor.repository.ProveedorRepository;
 import org.slf4j.Logger;
@@ -19,41 +20,54 @@ public class ProveedorService {
     private ProveedorRepository proveedorRepository;
 
     public List<Proveedor> findAll() {
-        log.info("Obteniendo lista de todos los proveedores");
         return proveedorRepository.findAll();
     }
 
     public Optional<Proveedor> findById(Integer id) {
-        log.info("Buscando proveedor con ID: {}", id);
         return proveedorRepository.findById(id);
     }
 
     public List<Proveedor> findByRazonSocial(String razonSocial) {
-        log.info("Buscando proveedores con razón social que contenga: {}", razonSocial);
         return proveedorRepository.findByRazonSocialContainingIgnoreCase(razonSocial);
     }
 
     public Proveedor findByRut(String rut) {
-        log.info("Buscando proveedor con RUT: {}", rut);
         return proveedorRepository.findByRut(rut);
     }
 
     public Proveedor findByEmail(String email) {
-        log.info("Buscando proveedor con email: {}", email);
         return proveedorRepository.findByEmail(email);
     }
 
-    public Proveedor save(Proveedor proveedor) {
-        log.info("Guardando proveedor: {}", proveedor.getRazonSocial());
-        Proveedor guardado = proveedorRepository.save(proveedor);
-        log.info("Proveedor guardado exitosamente con ID: {}", guardado.getId());
-        return guardado;
+    // Recibe DTO para crear
+    public Proveedor save(ProveedorRequestDTO dto) {
+        log.info("Guardando nuevo proveedor: {}", dto.getRazonSocial());
+
+        Proveedor proveedor = new Proveedor();
+        proveedor.setRut(dto.getRut());
+        proveedor.setRazonSocial(dto.getRazonSocial());
+        proveedor.setEmail(dto.getEmail());
+        proveedor.setTelefono(dto.getTelefono());
+
+        return proveedorRepository.save(proveedor);
+    }
+
+    //Recibe ID y DTO para actualizar de forma segura
+    public Proveedor update(Integer id, ProveedorRequestDTO dto) {
+        log.info("Actualizando proveedor con ID: {}", id);
+
+        Proveedor proveedor = new Proveedor();
+        proveedor.setId(id); // Forzamos el ID existente
+        proveedor.setRut(dto.getRut());
+        proveedor.setRazonSocial(dto.getRazonSocial());
+        proveedor.setEmail(dto.getEmail());
+        proveedor.setTelefono(dto.getTelefono());
+
+        return proveedorRepository.save(proveedor);
     }
 
     public void delete(Integer id) {
-        log.warn("Eliminando proveedor con ID: {}", id);
         proveedorRepository.deleteById(id);
-        log.info("Proveedor con ID: {} eliminado correctamente", id);
     }
 
     public boolean existsById(Integer id) {

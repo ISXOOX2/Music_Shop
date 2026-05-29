@@ -1,5 +1,6 @@
 package org.example.descuento.service;
 
+import org.example.descuento.dto.DescuentoRequestDTO;
 import org.example.descuento.model.Descuento;
 import org.example.descuento.repository.DescuentoRepository;
 import org.slf4j.Logger;
@@ -38,11 +39,33 @@ public class DescuentoService {
         return descuentoRepository.findByPorcentaje(porcentaje);
     }
 
-    public Descuento save(Descuento descuento) {
-        log.info("Guardando descuento con código: {}", descuento.getCodigo());
+    //Recibe DTO para crear
+    public Descuento save(DescuentoRequestDTO dto) {
+        log.info("Guardando descuento con código: {}", dto.getCodigo());
+
+        Descuento descuento = new Descuento();
+        descuento.setCodigo(dto.getCodigo());
+        descuento.setPorcentaje(dto.getPorcentaje());
+        descuento.setFechaExpiracion(dto.getFechaExpiracion());
+
         Descuento guardado = descuentoRepository.save(descuento);
         log.info("Descuento guardado exitosamente con ID: {}", guardado.getId());
         return guardado;
+    }
+
+    //Recibe ID y DTO para actualizar
+    public Descuento update(Integer id, DescuentoRequestDTO dto) {
+        log.info("Actualizando descuento con ID: {}", id);
+
+        Descuento descuento = new Descuento();
+        descuento.setId(id); // Forzamos el ID existente
+        descuento.setCodigo(dto.getCodigo());
+        descuento.setPorcentaje(dto.getPorcentaje());
+        descuento.setFechaExpiracion(dto.getFechaExpiracion());
+
+        Descuento actualizado = descuentoRepository.save(descuento);
+        log.info("Descuento con ID: {} actualizado correctamente", actualizado.getId());
+        return actualizado;
     }
 
     public void delete(Integer id) {

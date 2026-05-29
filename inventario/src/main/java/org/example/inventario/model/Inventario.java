@@ -15,9 +15,17 @@ public class Inventario {
     @Column(name = "id_inventario", nullable = false)
     private Integer id;
 
+    // NUEVO: Identificador del producto
+    @NotNull
+    @Column(name = "producto_id", nullable = false)
+    private Integer productoId;
+
+    // NUEVO: Identificador de la sucursal
+    @NotNull
+    @Column(name = "sucursal_id", nullable = false)
+    private Integer sucursalId;
+
     @NotNull
     @Column(name = "cantidad", nullable = false)
     private Integer cantidad;
-
-
 }

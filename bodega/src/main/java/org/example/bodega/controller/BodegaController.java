@@ -1,5 +1,6 @@
 package org.example.bodega.controller;
 
+import org.example.bodega.dto.BodegaRequestDTO;
 import org.example.bodega.model.Bodega;
 import org.example.bodega.service.BodegaService;
 import jakarta.validation.Valid;
@@ -47,20 +48,19 @@ public class BodegaController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Bodega create(@Valid @RequestBody Bodega bodega) {
-        return bodegaService.save(bodega);
+    public Bodega create(@Valid @RequestBody BodegaRequestDTO dto) {
+        return bodegaService.save(dto);
     }
 
     @PutMapping("/{id}")
     public Bodega update(@PathVariable Integer id,
-                         @Valid @RequestBody Bodega bodega) {
+                         @Valid @RequestBody BodegaRequestDTO dto) {
         if (!bodegaService.existsById(id)) {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND,
                     "Bodega con id " + id + " no encontrada");
         }
-        bodega.setId(id);
-        return bodegaService.save(bodega);
+        return bodegaService.update(id, dto);
     }
 
     @DeleteMapping("/{id}")
@@ -74,4 +74,3 @@ public class BodegaController {
         bodegaService.delete(id);
     }
 }
-

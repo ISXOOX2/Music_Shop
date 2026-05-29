@@ -1,5 +1,6 @@
 package org.example.proveedor.controller;
 
+import org.example.proveedor.dto.ProveedorRequestDTO;
 import org.example.proveedor.model.Proveedor;
 import org.example.proveedor.service.ProveedorService;
 import jakarta.validation.Valid;
@@ -64,20 +65,21 @@ public class ProveedorController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Proveedor create(@Valid @RequestBody Proveedor proveedor) {
-        return proveedorService.save(proveedor);
+    public Proveedor create(@Valid @RequestBody ProveedorRequestDTO dto) {
+
+        return proveedorService.save(dto);
     }
 
     @PutMapping("/{id}")
     public Proveedor update(@PathVariable Integer id,
-                            @Valid @RequestBody Proveedor proveedor) {
+                            @Valid @RequestBody ProveedorRequestDTO dto) {
         if (!proveedorService.existsById(id)) {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND,
                     "Proveedor con id " + id + " no encontrado");
         }
-        proveedor.setId(id);
-        return proveedorService.save(proveedor);
+
+        return proveedorService.update(id, dto);
     }
 
     @DeleteMapping("/{id}")
