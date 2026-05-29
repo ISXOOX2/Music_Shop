@@ -43,23 +43,23 @@ public class InventarioService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Registro de inventario no encontrado con ID: " + id));
     }
 
-    // MODIFICADO: Recibe DTO y usa Feign para validar
+    //Recibe DTO y usa Feign para validar
     public Inventario crear(InventarioRequestDTO dto) {
         log.info("Intentando crear inventario para Producto ID: {} en Sucursal ID: {}", dto.getProductoId(), dto.getSucursalId());
 
-        // 1. Validar existencia del Producto en el otro microservicio
+
         if (!productoClient.existeProductoPorId(dto.getProductoId())) {
             log.error("Error: Producto con ID {} no existe.", dto.getProductoId());
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El producto especificado no existe en el sistema.");
         }
 
-        // 2. Validar existencia de la Sucursal en el otro microservicio
+
         if (!sucursalClient.existeSucursalPorId(dto.getSucursalId())) {
             log.error("Error: Sucursal con ID {} no existe.", dto.getSucursalId());
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La sucursal especificada no existe en el sistema.");
         }
 
-        // 3. Si todo es válido, convertimos el DTO a Entidad y guardamos
+
         Inventario inventario = new Inventario();
         inventario.setProductoId(dto.getProductoId());
         inventario.setSucursalId(dto.getSucursalId());
