@@ -1,5 +1,6 @@
 package org.example.sucursal.service;
 
+import org.example.sucursal.dto.SucursalRequestDTO;
 import org.example.sucursal.model.Sucursal;
 import org.example.sucursal.repository.SucursalRepository;
 import org.slf4j.Logger;
@@ -19,60 +20,53 @@ public class SucursalService {
     private SucursalRepository sucursalRepository;
 
     public List<Sucursal> findAll() {
-        try {
-            log.info("Obteniendo lista de todas las sucursales");
-            return sucursalRepository.findAll();
-        } catch (Exception e) {
-            log.error("Error al obtener la lista de sucursales: {}", e.getMessage());
-            throw new RuntimeException("No se pudo obtener la lista de sucursales");
-        }
+        log.info("Obteniendo lista de todas las sucursales");
+        return sucursalRepository.findAll();
     }
 
     public Optional<Sucursal> findById(Integer id) {
-        try {
-            log.info("Buscando sucursal con ID: {}", id);
-            Optional<Sucursal> resultado = sucursalRepository.findById(id);
-            if (resultado.isEmpty()) {
-                log.warn("No se encontró ninguna sucursal con ID: {}", id);
-            }
-            return resultado;
-        } catch (Exception e) {
-            log.error("Error al buscar sucursal con ID {}: {}", id, e.getMessage());
-            throw new RuntimeException("Error al buscar la sucursal con ID: " + id);
-        }
+        log.info("Buscando sucursal con ID: {}", id);
+        return sucursalRepository.findById(id);
     }
 
     public List<Sucursal> findByNombre(String nombre) {
-        try {
-            log.info("Buscando sucursales con nombre que contenga: {}", nombre);
-            return sucursalRepository.findByNombreContainingIgnoreCase(nombre);
-        } catch (Exception e) {
-            log.error("Error al buscar sucursales por nombre '{}': {}", nombre, e.getMessage());
-            throw new RuntimeException("Error al buscar sucursales por nombre: " + nombre);
-        }
+        log.info("Buscando sucursales con nombre que contenga: {}", nombre);
+        return sucursalRepository.findByNombreContainingIgnoreCase(nombre);
     }
 
-    public Sucursal save(Sucursal sucursal) {
-        try {
-            log.info("Guardando sucursal: {}", sucursal.getNombre());
-            Sucursal guardada = sucursalRepository.save(sucursal);
-            log.info("Sucursal guardada exitosamente con ID: {}", guardada.getId());
-            return guardada;
-        } catch (Exception e) {
-            log.error("Error al guardar la sucursal '{}': {}", sucursal.getNombre(), e.getMessage());
-            throw new RuntimeException("No se pudo guardar la sucursal: " + sucursal.getNombre());
-        }
+    //Recibe DTO para crear de forma segura
+    public Sucursal save(SucursalRequestDTO dto) {
+        log.info("Guardando nueva sucursal: {}", dto.getNombre());
+
+        Sucursal sucursal = new Sucursal();
+        sucursal.setNombre(dto.getNombre());
+        sucursal.setDireccion(dto.getDireccion());
+        sucursal.setTelefono(dto.getTelefono());
+
+        Sucursal guardada = sucursalRepository.save(sucursal);
+        log.info("Sucursal guardada exitosamente con ID: {}", guardada.getId());
+        return guardada;
+    }
+
+    //Metodo update para recibir el ID y el DTO
+    public Sucursal update(Integer id, SucursalRequestDTO dto) {
+        log.info("Actualizando sucursal con ID: {}", id);
+
+        Sucursal sucursal = new Sucursal();
+        sucursal.setId(id);
+        sucursal.setNombre(dto.getNombre());
+        sucursal.setDireccion(dto.getDireccion());
+        sucursal.setTelefono(dto.getTelefono());
+
+        Sucursal actualizada = sucursalRepository.save(sucursal);
+        log.info("Sucursal con ID: {} actualizada correctamente", actualizada.getId());
+        return actualizada;
     }
 
     public void delete(Integer id) {
-        try {
-            log.warn("Eliminando sucursal con ID: {}", id);
-            sucursalRepository.deleteById(id);
-            log.info("Sucursal con ID: {} eliminada correctamente", id);
-        } catch (Exception e) {
-            log.error("Error al eliminar sucursal con ID {}: {}", id, e.getMessage());
-            throw new RuntimeException("No se pudo eliminar la sucursal con ID: " + id);
-        }
+        log.warn("Eliminando sucursal con ID: {}", id);
+        sucursalRepository.deleteById(id);
+        log.info("Sucursal con ID: {} eliminada correctamente", id);
     }
 
     public boolean existsById(Integer id) {

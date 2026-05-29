@@ -6,8 +6,8 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringBootApplication
-@EnableDiscoveryClient // Se registra en Eureka
-@EnableFeignClients    // Listo para usar Feign si es necesario
+@EnableDiscoveryClient
+@EnableFeignClients
 public class InventarioApplication {
 
     public static void main(String[] args) {

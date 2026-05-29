@@ -1,5 +1,6 @@
 package org.example.descuento.controller;
 
+import org.example.descuento.dto.DescuentoRequestDTO;
 import org.example.descuento.model.Descuento;
 import org.example.descuento.service.DescuentoService;
 import jakarta.validation.Valid;
@@ -53,20 +54,19 @@ public class DescuentoController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Descuento create(@Valid @RequestBody Descuento descuento) {
-        return descuentoService.save(descuento);
+    public Descuento create(@Valid @RequestBody DescuentoRequestDTO dto) {
+        return descuentoService.save(dto);
     }
 
     @PutMapping("/{id}")
     public Descuento update(@PathVariable Integer id,
-                            @Valid @RequestBody Descuento descuento) {
+                            @Valid @RequestBody DescuentoRequestDTO dto) {
         if (!descuentoService.existsById(id)) {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND,
                     "Descuento con id " + id + " no encontrado");
         }
-        descuento.setId(id);
-        return descuentoService.save(descuento);
+        return descuentoService.update(id, dto);
     }
 
     @DeleteMapping("/{id}")

@@ -1,5 +1,6 @@
 package org.example.sucursal.controller;
 
+import org.example.sucursal.dto.SucursalRequestDTO; // Importamos el DTO
 import org.example.sucursal.model.Sucursal;
 import org.example.sucursal.service.SucursalService;
 import jakarta.validation.Valid;
@@ -42,20 +43,19 @@ public class SucursalController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Sucursal create(@Valid @RequestBody Sucursal sucursal) {
-        return sucursalService.save(sucursal);
+    public Sucursal create(@Valid @RequestBody SucursalRequestDTO dto) {
+        return sucursalService.save(dto);
     }
 
     @PutMapping("/{id}")
     public Sucursal update(@PathVariable Integer id,
-                           @Valid @RequestBody Sucursal sucursal) {
+                           @Valid @RequestBody SucursalRequestDTO dto) {
         if (!sucursalService.existsById(id)) {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND,
                     "Sucursal con id " + id + " no encontrada");
         }
-        sucursal.setId(id);
-        return sucursalService.save(sucursal);
+        return sucursalService.update(id, dto);
     }
 
     @DeleteMapping("/{id}")
