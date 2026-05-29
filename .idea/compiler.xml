@@ -9,20 +9,11 @@
         <outputRelativeToContentRoot value="true" />
         <module name="EurekaServer" />
         <module name="devolucionGarantia" />
+        <module name="devolucion-garantia" />
         <module name="inventario" />
         <module name="pago" />
       </profile>
-      <profile name="Annotation profile for empleado" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="false">
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
-        </processorPath>
-        <module name="empleado" />
-      </profile>
-      <profile name="Annotation profile for bodega" enabled="true">
+      <profile name="Annotation profile for sucursal" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
@@ -30,6 +21,7 @@
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
         </processorPath>
         <module name="cliente" />
+        <module name="empleado" />
         <module name="sucursal" />
         <module name="descuento" />
         <module name="pedido" />
@@ -53,6 +45,7 @@
       <module name="cliente" options="-parameters" />
       <module name="demo" options="-parameters" />
       <module name="descuento" options="-parameters" />
+      <module name="devolucion-garantia" options="-parameters" />
       <module name="devolucionGarantia" options="-parameters" />
       <module name="empleado" options="-parameters" />
       <module name="inventario" options="-parameters" />
