@@ -20,7 +20,7 @@ public class Pago {
 
     // Enlace lógico con el Microservicio de Pedidos
     @NotNull(message = "El ID del pedido es obligatorio para procesar el pago")
-    @Column(name = "id_pedido", nullable = false) // Asegúrate de que en tu BD se llame id_pedido o cámbialo aquí
+    @Column(name = "id_pedido", nullable = false)
     private Integer pedidoId;
 
     @NotNull(message = "El monto pagado no puede ser nulo")

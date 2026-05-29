@@ -19,7 +19,7 @@ public class Pedido {
     @Column(name = "id_pedido", nullable = false)
     private Integer id;
 
-    // Agregamos el enlace lógico con el microservicio de Clientes
+    // Enlace lógico con el microservicio de Clientes
     @NotNull(message = "El ID del cliente es obligatorio para el flujo de negocio")
     @Column(name = "id_cliente", nullable = false)
     private Integer clienteId;

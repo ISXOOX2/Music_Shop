@@ -12,6 +12,7 @@
         <module name="devolucion-garantia" />
         <module name="inventario" />
         <module name="pago" />
+        <module name="ApiGateway" />
       </profile>
       <profile name="Annotation profile for sucursal" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
@@ -38,6 +39,7 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="ApiGateway" options="-parameters" />
       <module name="EurekaServer" options="-parameters" />
       <module name="Music_Shop" options="-parameters" />
       <module name="Music_Shop (1)" options="-parameters" />
