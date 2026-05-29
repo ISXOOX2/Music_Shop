@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @FeignClient(name = "inventario")
 public interface InventarioClient {
 
-    @PutMapping("/api/inventario/{id}/aumentar")
+
+    @PutMapping("/api/inventarios/{id}/aumentar")
     ResponseEntity<Object> aumentarStock(@PathVariable("id") Integer id, @RequestParam("cantidad") Integer cantidad);
 }

@@ -1,4 +1,4 @@
-package org.example.bodega.model;     // ← package nuevo, no es el de Music_Shop
+package org.example.bodega.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;

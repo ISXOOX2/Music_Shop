@@ -1,5 +1,6 @@
 package org.example.producto.service;
 
+import org.example.producto.dto.ProductoRequestDTO;
 import org.example.producto.model.Producto;
 import org.example.producto.repository.ProductoRepository;
 import org.slf4j.Logger;
@@ -19,70 +20,60 @@ public class ProductoService {
     private ProductoRepository productoRepository;
 
     public List<Producto> findAll() {
-        try {
-            log.info("Obteniendo lista de todos los productos");
-            return productoRepository.findAll();
-        } catch (Exception e) {
-            log.error("Error al obtener la lista de productos: {}", e.getMessage());
-            throw new RuntimeException("No se pudo obtener la lista de productos");
-        }
+        log.info("Obteniendo lista de todos los productos");
+        return productoRepository.findAll();
     }
 
     public Optional<Producto> findById(Integer id) {
-        try {
-            log.info("Buscando producto con ID: {}", id);
-            Optional<Producto> resultado = productoRepository.findById(id);
-            if (resultado.isEmpty()) {
-                log.warn("No se encontró ningún producto con ID: {}", id);
-            }
-            return resultado;
-        } catch (Exception e) {
-            log.error("Error al buscar producto con ID {}: {}", id, e.getMessage());
-            throw new RuntimeException("Error al buscar el producto con ID: " + id);
-        }
+        log.info("Buscando producto con ID: {}", id);
+        return productoRepository.findById(id);
     }
 
     public List<Producto> findByNombre(String nombre) {
-        try {
-            log.info("Buscando productos con nombre que contenga: {}", nombre);
-            return productoRepository.findByNombreContainingIgnoreCase(nombre);
-        } catch (Exception e) {
-            log.error("Error al buscar productos por nombre '{}': {}", nombre, e.getMessage());
-            throw new RuntimeException("Error al buscar productos por nombre: " + nombre);
-        }
+        log.info("Buscando productos con nombre que contenga: {}", nombre);
+        return productoRepository.findByNombreContainingIgnoreCase(nombre);
     }
 
     public List<Producto> findByFormato(String formato) {
-        try {
-            log.info("Buscando productos con formato: {}", formato);
-            return productoRepository.findByFormato(formato);
-        } catch (Exception e) {
-            log.error("Error al buscar productos con formato '{}': {}", formato, e.getMessage());
-            throw new RuntimeException("Error al buscar productos con formato: " + formato);
-        }
+        log.info("Buscando productos con formato: {}", formato);
+        return productoRepository.findByFormato(formato);
     }
 
-    public Producto save(Producto producto) {
-        try {
-            log.info("Guardando producto: {}", producto.getNombre());
-            Producto guardado = productoRepository.save(producto);
-            log.info("Producto guardado exitosamente con ID: {}", guardado.getId());
-            return guardado;
-        } catch (Exception e) {
-            log.error("Error al guardar producto '{}': {}", producto.getNombre(), e.getMessage());
-            throw new RuntimeException("No se pudo guardar el producto: " + producto.getNombre());
-        }
+    //Ahora recibe el DTO para crear un producto de forma segura
+    public Producto save(ProductoRequestDTO dto) {
+        log.info("Guardando nuevo producto: {}", dto.getNombre());
+
+        // Transformamos el DTO en la Entidad real
+        Producto producto = new Producto();
+        producto.setNombre(dto.getNombre());
+        producto.setFormato(dto.getFormato());
+        producto.setPrecio(dto.getPrecio());
+
+        Producto guardado = productoRepository.save(producto);
+        log.info("Producto guardado exitosamente con ID: {}", guardado.getId());
+        return guardado;
+    }
+
+    // Metodo específico para actualizar recibiendo el ID y el DTO
+    public Producto update(Integer id, ProductoRequestDTO dto) {
+        log.info("Actualizando producto con ID: {}", id);
+
+
+        Producto producto = new Producto();
+        producto.setId(id);
+        producto.setNombre(dto.getNombre());
+        producto.setFormato(dto.getFormato());
+        producto.setPrecio(dto.getPrecio());
+
+        Producto actualizado = productoRepository.save(producto);
+        log.info("Producto con ID: {} actualizado exitosamente", actualizado.getId());
+        return actualizado;
     }
 
     public void delete(Integer id) {
-        try {
-            log.warn("Eliminando producto con ID: {}", id);
-            productoRepository.deleteById(id);
-            log.info("Producto con ID: {} eliminado correctamente", id);
-        } catch (Exception e) {
-            log.error("Error al eliminar producto con ID {}: {}", id, e.getMessage());
-            throw new RuntimeException("No se pudo eliminar el producto con ID: " + id);
-        }
+        log.warn("Eliminando producto con ID: {}", id);
+        productoRepository.deleteById(id);
+        log.info("Producto con ID: {} eliminado correctamente", id);
     }
 
     public boolean existsById(Integer id) {

@@ -1,5 +1,6 @@
 package org.example.proveedor.service;
 
+import org.example.proveedor.dto.ProveedorRequestDTO;
 import org.example.proveedor.model.Proveedor;
 import org.example.proveedor.repository.ProveedorRepository;
 import org.slf4j.Logger;
@@ -19,88 +20,54 @@ public class ProveedorService {
     private ProveedorRepository proveedorRepository;
 
     public List<Proveedor> findAll() {
-        try {
-            log.info("Obteniendo lista de todos los proveedores");
-            return proveedorRepository.findAll();
-        } catch (Exception e) {
-            log.error("Error al obtener la lista de proveedores: {}", e.getMessage());
-            throw new RuntimeException("No se pudo obtener la lista de proveedores");
-        }
+        return proveedorRepository.findAll();
     }
 
     public Optional<Proveedor> findById(Integer id) {
-        try {
-            log.info("Buscando proveedor con ID: {}", id);
-            Optional<Proveedor> resultado = proveedorRepository.findById(id);
-            if (resultado.isEmpty()) {
-                log.warn("No se encontró ningún proveedor con ID: {}", id);
-            }
-            return resultado;
-        } catch (Exception e) {
-            log.error("Error al buscar proveedor con ID {}: {}", id, e.getMessage());
-            throw new RuntimeException("Error al buscar el proveedor con ID: " + id);
-        }
+        return proveedorRepository.findById(id);
     }
 
     public List<Proveedor> findByRazonSocial(String razonSocial) {
-        try {
-            log.info("Buscando proveedores con razón social que contenga: {}", razonSocial);
-            return proveedorRepository.findByRazonSocialContainingIgnoreCase(razonSocial);
-        } catch (Exception e) {
-            log.error("Error al buscar proveedores por razón social '{}': {}", razonSocial, e.getMessage());
-            throw new RuntimeException("Error al buscar proveedores por razón social: " + razonSocial);
-        }
+        return proveedorRepository.findByRazonSocialContainingIgnoreCase(razonSocial);
     }
 
     public Proveedor findByRut(String rut) {
-        try {
-            log.info("Buscando proveedor con RUT: {}", rut);
-            Proveedor resultado = proveedorRepository.findByRut(rut);
-            if (resultado == null) {
-                log.warn("No se encontró ningún proveedor con RUT: {}", rut);
-            }
-            return resultado;
-        } catch (Exception e) {
-            log.error("Error al buscar proveedor con RUT {}: {}", rut, e.getMessage());
-            throw new RuntimeException("Error al buscar el proveedor con RUT: " + rut);
-        }
+        return proveedorRepository.findByRut(rut);
     }
 
     public Proveedor findByEmail(String email) {
-        try {
-            log.info("Buscando proveedor con email: {}", email);
-            Proveedor resultado = proveedorRepository.findByEmail(email);
-            if (resultado == null) {
-                log.warn("No se encontró ningún proveedor con email: {}", email);
-            }
-            return resultado;
-        } catch (Exception e) {
-            log.error("Error al buscar proveedor con email {}: {}", email, e.getMessage());
-            throw new RuntimeException("Error al buscar el proveedor con email: " + email);
-        }
+        return proveedorRepository.findByEmail(email);
     }
 
-    public Proveedor save(Proveedor proveedor) {
-        try {
-            log.info("Guardando proveedor: {}", proveedor.getRazonSocial());
-            Proveedor guardado = proveedorRepository.save(proveedor);
-            log.info("Proveedor guardado exitosamente con ID: {}", guardado.getId());
-            return guardado;
-        } catch (Exception e) {
-            log.error("Error al guardar proveedor '{}': {}", proveedor.getRazonSocial(), e.getMessage());
-            throw new RuntimeException("No se pudo guardar el proveedor: " + proveedor.getRazonSocial());
-        }
+    // Recibe DTO para crear
+    public Proveedor save(ProveedorRequestDTO dto) {
+        log.info("Guardando nuevo proveedor: {}", dto.getRazonSocial());
+
+        Proveedor proveedor = new Proveedor();
+        proveedor.setRut(dto.getRut());
+        proveedor.setRazonSocial(dto.getRazonSocial());
+        proveedor.setEmail(dto.getEmail());
+        proveedor.setTelefono(dto.getTelefono());
+
+        return proveedorRepository.save(proveedor);
+    }
+
+    //Recibe ID y DTO para actualizar de forma segura
+    public Proveedor update(Integer id, ProveedorRequestDTO dto) {
+        log.info("Actualizando proveedor con ID: {}", id);
+
+        Proveedor proveedor = new Proveedor();
+        proveedor.setId(id); // Forzamos el ID existente
+        proveedor.setRut(dto.getRut());
+        proveedor.setRazonSocial(dto.getRazonSocial());
+        proveedor.setEmail(dto.getEmail());
+        proveedor.setTelefono(dto.getTelefono());
+
+        return proveedorRepository.save(proveedor);
     }
 
     public void delete(Integer id) {
-        try {
-            log.warn("Eliminando proveedor con ID: {}", id);
-            proveedorRepository.deleteById(id);
-            log.info("Proveedor con ID: {} eliminado correctamente", id);
-        } catch (Exception e) {
-            log.error("Error al eliminar proveedor con ID {}: {}", id, e.getMessage());
-            throw new RuntimeException("No se pudo eliminar el proveedor con ID: " + id);
-        }
+        proveedorRepository.deleteById(id);
     }
 
     public boolean existsById(Integer id) {

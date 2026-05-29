@@ -2,14 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/bodega/bodega.iml" filepath="$PROJECT_DIR$/bodega/bodega.iml" />
-      <module fileurl="file://$PROJECT_DIR$/cliente/cliente.iml" filepath="$PROJECT_DIR$/cliente/cliente.iml" />
-      <module fileurl="file://$PROJECT_DIR$/descuento/descuento.iml" filepath="$PROJECT_DIR$/descuento/descuento.iml" />
-      <module fileurl="file://$PROJECT_DIR$/devolucionGarantia/devolucionGarantia.iml" filepath="$PROJECT_DIR$/devolucionGarantia/devolucionGarantia.iml" />
-      <module fileurl="file://$PROJECT_DIR$/empleado/empleado.iml" filepath="$PROJECT_DIR$/empleado/empleado.iml" />
       <module fileurl="file://$PROJECT_DIR$/inventario/inventario.iml" filepath="$PROJECT_DIR$/inventario/inventario.iml" />
-      <module fileurl="file://$PROJECT_DIR$/pago/pago.iml" filepath="$PROJECT_DIR$/pago/pago.iml" />
-      <module fileurl="file://$PROJECT_DIR$/pedido/pedido.iml" filepath="$PROJECT_DIR$/pedido/pedido.iml" />
+      <module fileurl="file://$PROJECT_DIR$/producto/producto.iml" filepath="$PROJECT_DIR$/producto/producto.iml" />
     </modules>
   </component>
 </project>

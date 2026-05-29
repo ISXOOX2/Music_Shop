@@ -1,5 +1,6 @@
 package org.example.producto.controller;
 
+import org.example.producto.dto.ProductoRequestDTO;
 import org.example.producto.model.Producto;
 import org.example.producto.service.ProductoService;
 import jakarta.validation.Valid;
@@ -47,20 +48,18 @@ public class ProductoController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Producto create(@Valid @RequestBody Producto producto) {
-        return productoService.save(producto);
+
+    public Producto create(@Valid @RequestBody ProductoRequestDTO dto) {
+        return productoService.save(dto);
     }
 
     @PutMapping("/{id}")
     public Producto update(@PathVariable Integer id,
-                           @Valid @RequestBody Producto producto) {
+                           @Valid @RequestBody ProductoRequestDTO dto) {
         if (!productoService.existsById(id)) {
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND,
-                    "Producto con id " + id + " no encontrado");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Producto no encontrado");
         }
-        producto.setId(id);
-        return productoService.save(producto);
+        return productoService.update(id, dto);
     }
 
     @DeleteMapping("/{id}")

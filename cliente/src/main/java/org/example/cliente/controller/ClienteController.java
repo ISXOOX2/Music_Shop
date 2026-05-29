@@ -1,5 +1,6 @@
 package org.example.cliente.controller;
 
+import org.example.cliente.dto.ClienteRequestDTO;
 import org.example.cliente.model.Cliente;
 import org.example.cliente.service.ClienteService;
 import jakarta.validation.Valid;
@@ -64,20 +65,19 @@ public class ClienteController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Cliente create(@Valid @RequestBody Cliente cliente) {
-        return clienteService.save(cliente);
+    public Cliente create(@Valid @RequestBody ClienteRequestDTO dto) {
+        return clienteService.save(dto);
     }
 
     @PutMapping("/{id}")
     public Cliente update(@PathVariable Integer id,
-                          @Valid @RequestBody Cliente cliente) {
+                          @Valid @RequestBody ClienteRequestDTO dto) {
         if (!clienteService.existsById(id)) {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND,
                     "Cliente con id " + id + " no encontrado");
         }
-        cliente.setId(id);
-        return clienteService.save(cliente);
+        return clienteService.update(id, dto);
     }
 
     @DeleteMapping("/{id}")
