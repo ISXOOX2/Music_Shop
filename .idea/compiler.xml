@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="EurekaServer" />
+        <module name="devolucionGarantia" />
+        <module name="devolucion-garantia" />
+        <module name="inventario" />
+        <module name="pago" />
+        <module name="ApiGateway" />
+      </profile>
+      <profile name="Annotation profile for proveedor" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
+        </processorPath>
+        <module name="pedido" />
+        <module name="proveedor" />
+      </profile>
+      <profile name="Annotation profile for sucursal" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
+        </processorPath>
+        <module name="cliente" />
+        <module name="producto" />
+        <module name="empleado" />
+        <module name="sucursal" />
+        <module name="descuento" />
+        <module name="bodega" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="demo" target="21" />
+      <module name="Music_Shop" target="21" />
+      <module name="Music_Shop (1)" target="21" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="ApiGateway" options="" />
+      <module name="EurekaServer" options="-parameters" />
+      <module name="Music_Shop" options="-parameters" />
+      <module name="Music_Shop (1)" options="-parameters" />
+      <module name="bodega" options="-parameters" />
+      <module name="cliente" options="-parameters" />
+      <module name="demo" options="-parameters" />
+      <module name="descuento" options="-parameters" />
+      <module name="devolucion-garantia" options="-parameters" />
+      <module name="devolucionGarantia" options="-parameters" />
+      <module name="empleado" options="-parameters" />
+      <module name="inventario" options="-parameters" />
+      <module name="pago" options="-parameters" />
+      <module name="pedido" options="-parameters" />
+      <module name="producto" options="-parameters" />
+      <module name="proveedor" options="-parameters" />
+      <module name="sucursal" options="-parameters" />
+    </option>
+  </component>
+</project>

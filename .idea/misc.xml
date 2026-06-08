@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ExternalStorageConfigurationManager" enabled="true" />
+  <component name="MavenProjectsManager">
+    <option name="originalFiles">
+      <list>
+        <option value="$PROJECT_DIR$/pom.xml" />
+        <option value="$PROJECT_DIR$/EurekaServer/pom.xml" />
+        <option value="$PROJECT_DIR$/Music_Shop/pom.xml" />
+        <option value="$PROJECT_DIR$/bodega/pom.xml" />
+        <option value="$PROJECT_DIR$/empleado/pom.xml" />
+        <option value="$PROJECT_DIR$/devolucionGarantia/pom.xml" />
+        <option value="$PROJECT_DIR$/inventario/pom.xml" />
+        <option value="$PROJECT_DIR$/pago/pom.xml" />
+        <option value="$PROJECT_DIR$/Pedido/pom.xml" />
+        <option value="$PROJECT_DIR$/pedido/pom.xml" />
+        <option value="$PROJECT_DIR$/demo/pom.xml" />
+        <option value="$PROJECT_DIR$/cliente/pom.xml" />
+        <option value="$PROJECT_DIR$/descuento/pom.xml" />
+        <option value="$PROJECT_DIR$/producto/pom.xml" />
+        <option value="$PROJECT_DIR$/proveedor/pom.xml" />
+        <option value="$PROJECT_DIR$/sucursal/pom.xml" />
+        <option value="$PROJECT_DIR$/ApiGateway/pom.xml" />
+      </list>
+    </option>
+    <option name="ignoredFiles">
+      <set>
+        <option value="$PROJECT_DIR$/Music_Shop/pom.xml" />
+        <option value="$PROJECT_DIR$/demo/pom.xml" />
+      </set>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_24" default="true" project-jdk-name="24" project-jdk-type="JavaSDK" />
+</project>
