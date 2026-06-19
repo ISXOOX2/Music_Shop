@@ -1,5 +1,9 @@
 package org.example.pedido.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.example.pedido.dto.PedidoRequestDTO;
 import org.example.pedido.model.Pedido;
@@ -16,6 +20,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/pedidos")
+@Tag(name="Pedidos", description="Gestión de pedidos y órdenes")
 public class PedidoController {
 
     private static final Logger log = LoggerFactory.getLogger(PedidoController.class);
@@ -24,46 +29,60 @@ public class PedidoController {
     private PedidoService pedidoService;
 
     @GetMapping
+    @Operation(summary="Obtener todos los pedidos", description="Retorna lista de todos los pedidos")
+    @ApiResponse(responseCode="200", description="OK")
     public List<Pedido> findAll(){
         return pedidoService.findAll();
     }
 
     @GetMapping("/{id}")
-    public Pedido findById(@PathVariable Integer id){
+    @Operation(summary="Obtener pedido por ID", description="Retorna un pedido específico")
+    @ApiResponse(responseCode="200", description="OK")
+    @ApiResponse(responseCode="404", description="No encontrado")
+    public Pedido findById(@Parameter(description="ID del pedido") @PathVariable Integer id){
         return pedidoService.findById(id)
                 .orElseThrow(() -> {
-                    log.warn("Intento de buscar un pedido inexistente con ID: {}", id);
-                    return new ResponseStatusException(HttpStatus.NOT_FOUND, "Pedido con id " + id + " no encontrado");
+                    log.warn("Pedido no encontrado: {}", id);
+                    return new ResponseStatusException(HttpStatus.NOT_FOUND, "Pedido no encontrado");
                 });
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @Operation(summary="Crear pedido", description="Crea un nuevo pedido")
+    @ApiResponse(responseCode="201", description="Creado exitosamente")
+    @ApiResponse(responseCode="400", description="Datos inválidos")
     public Pedido create(@Valid @RequestBody PedidoRequestDTO pedidoDTO){
         return pedidoService.save(pedidoDTO);
     }
 
-    //Para actualizar (PUT)
     @PutMapping("/{id}")
-    public ResponseEntity<Pedido> actualizar(@PathVariable Integer id, @Valid @RequestBody PedidoRequestDTO request) {
+    @Operation(summary="Actualizar pedido", description="Actualiza un pedido existente")
+    @ApiResponse(responseCode="200", description="Actualizado exitosamente")
+    @ApiResponse(responseCode="404", description="No encontrado")
+    public ResponseEntity<Pedido> actualizar(
+            @Parameter(description="ID del pedido") @PathVariable Integer id,
+            @Valid @RequestBody PedidoRequestDTO request) {
         Pedido pedidoActualizado = pedidoService.actualizar(id, request);
         return ResponseEntity.ok(pedidoActualizado);
     }
 
-    // ELIMINAR
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Integer id){
+    @Operation(summary="Eliminar pedido", description="Elimina un pedido")
+    @ApiResponse(responseCode="204", description="Eliminado exitosamente")
+    @ApiResponse(responseCode="404", description="No encontrado")
+    public void delete(@Parameter(description="ID del pedido") @PathVariable Integer id){
         if(!pedidoService.existsById(id)){
-            log.warn("Intento de eliminar un pedido inexistente con ID: {}", id);
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Pedido con id " + id + " no encontrado");
+            log.warn("Intento eliminar pedido inexistente: {}", id);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Pedido no encontrado");
         }
         pedidoService.delete(id);
     }
 
-    //Para verificar si existe (GET /exists/{id})
     @GetMapping("/exists/{id}")
-    public ResponseEntity<Boolean> existe(@PathVariable Integer id) {
+    @Operation(summary="Verificar existencia", description="Verifica si existe un pedido")
+    public ResponseEntity<Boolean> existe(@Parameter(description="ID del pedido") @PathVariable Integer id) {
         return ResponseEntity.ok(pedidoService.existsById(id));
     }
 }

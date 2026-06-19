@@ -1,11 +1,18 @@
 package org.example.bodega.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.example.bodega.dto.BodegaRequestDTO;
 import org.example.bodega.model.Bodega;
 import org.example.bodega.service.BodegaService;
-import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -13,64 +20,68 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/bodegas")
+@Tag(name="Bodegas", description="Control de logística e inventario")
 public class BodegaController {
+
+    private static final Logger log = LoggerFactory.getLogger(BodegaController.class);
 
     @Autowired
     private BodegaService bodegaService;
 
     @GetMapping
-    public List<Bodega> findAll() {
+    @Operation(summary="Obtener todas las bodegas", description="Retorna lista de todas las bodegas")
+    @ApiResponse(responseCode="200", description="OK")
+    public List<Bodega> findAll(){
         return bodegaService.findAll();
     }
 
     @GetMapping("/{id}")
-    public Bodega findById(@PathVariable Integer id) {
+    @Operation(summary="Obtener bodega por ID", description="Retorna una bodega específica")
+    @ApiResponse(responseCode="200", description="OK")
+    @ApiResponse(responseCode="404", description="No encontrado")
+    public Bodega findById(@Parameter(description="ID de la bodega") @PathVariable Integer id){
         return bodegaService.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        "Bodega con id " + id + " no encontrada"));
-    }
-
-    @GetMapping("/buscar/{nombre}")
-    public List<Bodega> findByNombre(@PathVariable String nombre) {
-        return bodegaService.findByNombre(nombre);
-    }
-
-    @GetMapping("/buscar/sucursal/{sucursalId}")
-    public List<Bodega> findBySucursalId(@PathVariable Integer sucursalId) {
-        return bodegaService.findBySucursalId(sucursalId);
-    }
-
-    @GetMapping("/exists/{id}")
-    public boolean existsById(@PathVariable Integer id) {
-        return bodegaService.existsById(id);
+                .orElseThrow(() -> {
+                    log.warn("Bodega no encontrada: {}", id);
+                    return new ResponseStatusException(HttpStatus.NOT_FOUND, "Bodega no encontrada");
+                });
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Bodega create(@Valid @RequestBody BodegaRequestDTO dto) {
-        return bodegaService.save(dto);
+    @Operation(summary="Crear bodega", description="Crea una nueva bodega")
+    @ApiResponse(responseCode="201", description="Creado exitosamente")
+    @ApiResponse(responseCode="400", description="Datos inválidos")
+    public Bodega create(@Valid @RequestBody BodegaRequestDTO bodegaDTO){
+        return bodegaService.save(bodegaDTO);
     }
 
     @PutMapping("/{id}")
-    public Bodega update(@PathVariable Integer id,
-                         @Valid @RequestBody BodegaRequestDTO dto) {
-        if (!bodegaService.existsById(id)) {
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND,
-                    "Bodega con id " + id + " no encontrada");
-        }
-        return bodegaService.update(id, dto);
+    @Operation(summary="Actualizar bodega", description="Actualiza una bodega existente")
+    @ApiResponse(responseCode="200", description="Actualizado exitosamente")
+    @ApiResponse(responseCode="404", description="No encontrado")
+    public ResponseEntity<Bodega> update(
+            @Parameter(description="ID de la bodega") @PathVariable Integer id,
+            @Valid @RequestBody BodegaRequestDTO request) {
+        Bodega bodegaActualizada = bodegaService.update(id, request);
+        return ResponseEntity.ok(bodegaActualizada);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Integer id) {
-        if (!bodegaService.existsById(id)) {
-            throw new ResponseStatusException(
-                    HttpStatus.NOT_FOUND,
-                    "Bodega con id " + id + " no encontrada");
+    @Operation(summary="Eliminar bodega", description="Elimina una bodega")
+    @ApiResponse(responseCode="204", description="Eliminado exitosamente")
+    public void delete(@Parameter(description="ID de la bodega") @PathVariable Integer id){
+        if(!bodegaService.existsById(id)){
+            log.warn("Intento eliminar bodega inexistente: {}", id);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Bodega no encontrada");
         }
         bodegaService.delete(id);
+    }
+
+    @GetMapping("/exists/{id}")
+    @Operation(summary="Verificar existencia", description="Verifica si existe una bodega")
+    public ResponseEntity<Boolean> existe(@Parameter(description="ID de la bodega") @PathVariable Integer id) {
+        return ResponseEntity.ok(bodegaService.existsById(id));
     }
 }
