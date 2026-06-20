@@ -1,11 +1,16 @@
 package org.example.inventario.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.example.inventario.dto.InventarioRequestDTO;
 import org.example.inventario.model.Inventario;
 import org.example.inventario.service.InventarioService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,53 +20,69 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/inventarios")
+@Tag(name="Inventarios", description="Gestión y control de stock")
 public class InventarioController {
 
     private static final Logger log = LoggerFactory.getLogger(InventarioController.class);
-    private final InventarioService inventarioService;
 
-    public InventarioController(InventarioService inventarioService) {
-        this.inventarioService = inventarioService;
-    }
+    @Autowired
+    private InventarioService inventarioService;
 
     @GetMapping
-    public ResponseEntity<List<Inventario>> listarTodos() {
-        return ResponseEntity.ok(inventarioService.listarTodos());
+    @Operation(summary="Obtener todos los inventarios", description="Retorna lista de todos los inventarios")
+    @ApiResponse(responseCode="200", description="OK")
+    public List<Inventario> listarTodos(){
+        return inventarioService.listarTodos();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Inventario> obtenerStock(@PathVariable Integer id) {
-        return ResponseEntity.ok(inventarioService.obtenerPorId(id));
+    @Operation(summary="Obtener inventario por ID", description="Retorna un inventario específico")
+    @ApiResponse(responseCode="200", description="OK")
+    @ApiResponse(responseCode="404", description="No encontrado")
+    public Inventario obtenerPorId(@Parameter(description="ID del inventario") @PathVariable Integer id){
+        return inventarioService.obtenerPorId(id);
     }
 
-    @GetMapping("/exists/{id}")
-    public ResponseEntity<Boolean> existe(@PathVariable Integer id) {
-        return ResponseEntity.ok(inventarioService.existePorId(id));
-    }
-
-    //Recibe InventarioRequestDTO
     @PostMapping
-    public ResponseEntity<Inventario> crear(@Valid @RequestBody InventarioRequestDTO request) {
-        return new ResponseEntity<>(inventarioService.crear(request), HttpStatus.CREATED);
+    @ResponseStatus(HttpStatus.CREATED)
+    @Operation(summary="Crear inventario", description="Crea un nuevo inventario")
+    @ApiResponse(responseCode="201", description="Creado exitosamente")
+    @ApiResponse(responseCode="400", description="Datos inválidos")
+    public Inventario crear(@Valid @RequestBody InventarioRequestDTO dto){
+        return inventarioService.crear(dto);
     }
 
-    @PutMapping("/{id}/reducir")
-    public ResponseEntity<Inventario> reducirStock(@PathVariable Integer id, @RequestParam Integer cantidad) {
-        return ResponseEntity.ok(inventarioService.reducirStock(id, cantidad));
+    @PutMapping("/reducir/{id}")
+    @Operation(summary="Reducir stock", description="Reduce la cantidad de stock")
+    @ApiResponse(responseCode="200", description="Actualizado exitosamente")
+    public ResponseEntity<Inventario> reducirStock(
+            @Parameter(description="ID del inventario") @PathVariable Integer id,
+            @Parameter(description="Cantidad a reducir") @RequestParam Integer cantidad) {
+        Inventario actualizado = inventarioService.reducirStock(id, cantidad);
+        return ResponseEntity.ok(actualizado);
     }
 
-    @PutMapping("/{id}/aumentar")
-    public ResponseEntity<Inventario> aumentarStock(@PathVariable Integer id, @RequestParam Integer cantidad) {
-        return ResponseEntity.ok(inventarioService.aumentarStock(id, cantidad));
+    @PutMapping("/aumentar/{id}")
+    @Operation(summary="Aumentar stock", description="Aumenta la cantidad de stock")
+    @ApiResponse(responseCode="200", description="Actualizado exitosamente")
+    public ResponseEntity<Inventario> aumentarStock(
+            @Parameter(description="ID del inventario") @PathVariable Integer id,
+            @Parameter(description="Cantidad a aumentar") @RequestParam Integer cantidad) {
+        Inventario actualizado = inventarioService.aumentarStock(id, cantidad);
+        return ResponseEntity.ok(actualizado);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminar(@PathVariable Integer id) {
-        if (!inventarioService.existePorId(id)) {
-            log.warn("Intento de eliminar un inventario inexistente con ID: {}", id);
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Inventario con id " + id + " no encontrado");
-        }
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Operation(summary="Eliminar inventario", description="Elimina un inventario")
+    @ApiResponse(responseCode="204", description="Eliminado exitosamente")
+    public void eliminar(@Parameter(description="ID del inventario") @PathVariable Integer id){
         inventarioService.eliminar(id);
-        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/exists/{id}")
+    @Operation(summary="Verificar existencia", description="Verifica si existe un inventario")
+    public ResponseEntity<Boolean> existePorId(@Parameter(description="ID del inventario") @PathVariable Integer id) {
+        return ResponseEntity.ok(inventarioService.existePorId(id));
     }
 }
