@@ -39,35 +39,49 @@ public class ProductoService {
         return productoRepository.findByFormato(formato);
     }
 
-    //Ahora recibe el DTO para crear un producto de forma segura
+    public List<Producto> findByCategoria(String categoria) {
+        log.info("Buscando productos con categoría: {}", categoria);
+        return productoRepository.findByCategoria(categoria);
+    }
+
+
     public Producto save(ProductoRequestDTO dto) {
         log.info("Guardando nuevo producto: {}", dto.getNombre());
 
-        // Transformamos el DTO en la Entidad real
         Producto producto = new Producto();
         producto.setNombre(dto.getNombre());
         producto.setFormato(dto.getFormato());
         producto.setPrecio(dto.getPrecio());
+        producto.setDescripcion(dto.getDescripcion());
+        producto.setCategoria(dto.getCategoria());
+        producto.setMarca(dto.getMarca());
 
         Producto guardado = productoRepository.save(producto);
         log.info("Producto guardado exitosamente con ID: {}", guardado.getId());
         return guardado;
     }
 
-    // Metodo específico para actualizar recibiendo el ID y el DTO
+
     public Producto update(Integer id, ProductoRequestDTO dto) {
         log.info("Actualizando producto con ID: {}", id);
-
 
         Producto producto = new Producto();
         producto.setId(id);
         producto.setNombre(dto.getNombre());
         producto.setFormato(dto.getFormato());
         producto.setPrecio(dto.getPrecio());
+        producto.setDescripcion(dto.getDescripcion());
+        producto.setCategoria(dto.getCategoria());
+        producto.setMarca(dto.getMarca());
 
         Producto actualizado = productoRepository.save(producto);
         log.info("Producto con ID: {} actualizado exitosamente", actualizado.getId());
         return actualizado;
+    }
+
+
+    public Producto actualizar(Integer id, ProductoRequestDTO dto) {
+        return update(id, dto);
     }
 
     public void delete(Integer id) {

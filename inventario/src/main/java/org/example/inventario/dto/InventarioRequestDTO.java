@@ -13,7 +13,10 @@ public class InventarioRequestDTO {
     @NotNull(message = "El ID de la sucursal es obligatorio")
     private Integer sucursalId;
 
-    @NotNull(message = "La cantidad es obligatoria")
-    @Min(value = 0, message = "La cantidad no puede ser negativa")
-    private Integer cantidad;
+    @NotNull(message = "La cantidad disponible es obligatoria")
+    @Min(value = 0, message = "La cantidad disponible no puede ser negativa")
+    private Integer cantidadDisponible;
+
+    @Min(value = 0, message = "La cantidad reservada no puede ser negativa")
+    private Integer cantidadReservada = 0;
 }
