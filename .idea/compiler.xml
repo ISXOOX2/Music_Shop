@@ -9,7 +9,6 @@
         <outputRelativeToContentRoot value="true" />
         <module name="EurekaServer" />
         <module name="devolucionGarantia" />
-        <module name="devolucion-garantia" />
         <module name="inventario" />
         <module name="pago" />
         <module name="ApiGateway" />
@@ -47,7 +46,6 @@
       <module name="cliente" options="-parameters" />
       <module name="demo" options="-parameters" />
       <module name="descuento" options="-parameters" />
-      <module name="devolucion-garantia" options="-parameters" />
       <module name="devolucionGarantia" options="-parameters" />
       <module name="empleado" options="-parameters" />
       <module name="inventario" options="-parameters" />

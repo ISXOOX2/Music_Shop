@@ -11,7 +11,7 @@
     </parent>
 
     <groupId>org.example</groupId>
-    <artifactId>devolucion-garantia</artifactId>
+    <artifactId>devolucionGarantia</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>devolucion-garantia</name>
     <description>Microservicio de Devoluciones y Garantias</description>
