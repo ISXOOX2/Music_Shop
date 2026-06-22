@@ -32,3 +32,43 @@ Para levantar el proyecto en un entorno local, hay que seguir los siguientes pas
 
 Pruebas
 Las pruebas de la API se pueden realizar utilizando la colección de Postman adjunta al proyecto.
+
+## Configuración por Perfiles
+
+El proyecto soporta perfiles de ejecución para dev y test:
+
+### Ejecución local (desarrollo)
+```bash
+# El perfil dev se activa automáticamente
+mvn spring-boot:run
+```
+
+### Ejecución con perfil específico
+```bash
+mvn spring-boot:run -Dspring-boot.run.arguments="--spring.profiles.active=dev"
+```
+
+## Despliegue con Docker
+
+### Construir y ejecutar con docker-compose
+```bash
+# Navegar a la raíz del proyecto
+cd /ruta/al/proyecto
+
+# Construir todas las imágenes y levantar servicios
+docker-compose up -d
+
+# Ver logs en tiempo real
+docker-compose logs -f
+
+# Ver estado de servicios
+docker-compose ps
+
+# Detener todos los servicios
+docker-compose down
+
+# Detener y eliminar volúmenes (borra BD)
+docker-compose down -v
+```
+
+### Acceso a servicios en Docker
