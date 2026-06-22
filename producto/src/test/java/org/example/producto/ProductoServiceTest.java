@@ -135,7 +135,6 @@ class ProductoServiceTest {
     void testActualizarProducto() {
         // Given
         Integer idProducto = 1;
-        when(productoRepository.findById(idProducto)).thenReturn(Optional.of(productoTest));
 
         Producto productoActualizado = new Producto();
         productoActualizado.setId(1);
@@ -155,12 +154,11 @@ class ProductoServiceTest {
         dtoActualizado.setMarca("Yamaha");
 
         // When
-        Producto resultado = productoService.actualizar(idProducto, dtoActualizado);
+        Producto resultado = productoService.update(idProducto, dtoActualizado);
 
         // Then
         assertEquals("Guitarra Acústica Premium", resultado.getNombre(), "El nombre debe actualizarse");
         assertEquals(180000, resultado.getPrecio(), "El precio debe actualizarse a 180000");
-        verify(productoRepository, times(1)).findById(idProducto);
         verify(productoRepository, times(1)).save(any(Producto.class));
     }
 
@@ -169,7 +167,6 @@ class ProductoServiceTest {
     void testEliminarProducto() {
         // Given
         Integer idProducto = 1;
-        when(productoRepository.existsById(idProducto)).thenReturn(true);
 
         // When
         productoService.delete(idProducto);

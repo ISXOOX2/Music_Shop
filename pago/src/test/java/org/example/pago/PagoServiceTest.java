@@ -86,8 +86,7 @@ class PagoServiceTest {
     void testGuardarPagoFallaConPedidoNoExistente() {
         // Given
         when(pedidoClient.obtenerPedidoPorId(999))
-                .thenThrow(FeignException.NotFound.create("Pedido no encontrado",
-                        null, null, null));
+                .thenThrow(FeignException.class);
 
         PagoRequestDTO dtoInvalido = new PagoRequestDTO();
         dtoInvalido.setPedidoId(999);
