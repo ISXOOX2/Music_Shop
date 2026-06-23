@@ -174,7 +174,7 @@ class InventarioServiceTest {
         Inventario inventarioActualizado = new Inventario();
         inventarioActualizado.setId(1);
         inventarioActualizado.setProductoId(100);
-        inventarioActualizado.setTotalStock(30); // 25 + 5 (revertidas)
+        inventarioActualizado.setCantidadDisponible(30); // 25 + 5 (revertidas)
         inventarioActualizado.setCantidadDisponible(30);
         inventarioActualizado.setCantidadReservada(0);
 
