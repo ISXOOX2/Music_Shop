@@ -1,34 +1,67 @@
-Music Shop - Arquitectura de Microservicios
+MUSIC SHOP - ARQUITECTURA DE MICROSERVICIOS
 
-Este proyecto consiste en una plataforma de instrumentos musicales basada en una arquitectura de microservicios.
-Integrantes del Equipo: Isabel Cántaro y Andeison Belandria
+Plataforma de venta de instrumentos musicales desarrollada con una arquitectura de microservicios usando Spring Boot, Spring Cloud Gateway y Eureka Server.
 
-Arquitectura del Sistema
-El sistema está compuesto por 11 microservicios independientes,un servidor de descubrimiento y Eureka Server.
+Integrantes del equipo: Isabel Cántaro y Andeison Belandria
 
-  1-Eureka Server: Servidor central donde todos los demás microservicios se registran automáticamente al encenderse para poder hablar entre ellos sin conocer sus direcciones IP reales.
-  2-API Gateway:Recibe todas las peticiones desde el exterior (como Postman) y se encarga de redirigirlas al microservicio que corresponda.
-  3-Producto: Administra el catálogo completo de la tienda, incluyendo la creación, categorías y detalles de los instrumentos musicales.
-  4-Inventario: Se encarga de la gestión y el control de stock de todos los productos disponibles.
-  5-Pedido: Administra las compras, genera las órdenes y conecta con otros servicios para verificar que la transacción sea válida.
-  6-Pago: Procesa las transacciones financieras, valida los montos de las órdenes y registra si la boleta fue pagada con éxito.
-  7-DevoluciónGarantía: Gestiona los procesos post-venta, solicitudes de devolución de productos, reembolsos y la aplicación de garantía de los instrumentos.
-  8-Bodega: Controla la logística interna, el inventario de los almacenes.
-  9-Cliente: Almacena y gestiona los datos personales, de los compradores de la tienda.
-  10-Descuento: Administra las rebajas de precios y cupones especiales que se pueden aplicar a los productos durante una compra.
-  11-Proveedor: Gestiona la información de las marcas y empresas distribuidoras que nos surten de instrumentos musicales.
-  12-Sucursal: Administra los datos de las distintas tiendas físicas.
-  13-Empleado: Controla la información del personal, los roles de los trabajadores y los accesos de los vendedores al sistema.
 
-Instrucciones de Ejecución
+ARQUITECTURA DEL SISTEMA
 
-Para levantar el proyecto en un entorno local, hay que seguir los siguientes pasos:
+El sistema está compuesto por 11 microservicios de negocio, un API Gateway y un Eureka Server.
 
-1. Clonar este repositorio en la máquina local.
-2. Asegúrarse de tener el servidor MySQL encendido.
-3. Abrir el proyecto en el IDE (IntelliJ IDEA).
-4. Iniciar primero el proyecto “EurekaServerApplication”. Esperar a que la consola indique que está corriendo.
-5. Iniciar los microservicios uno por uno.
+1. Eureka Server, puerto 8761: Registro y descubrimiento de servicios.
+2. API Gateway, puerto 8080: Punto único de entrada, enruta las peticiones.
+3. Bodega, puerto 8081: Logística e inventario de almacenes.
+4. Cliente, puerto 8082: Datos personales de los compradores.
+5. Descuento, puerto 8083: Rebajas de precios y cupones.
+6. DevoluciónGarantía, puerto 8084: Devoluciones, reembolsos y garantías.
+7. Empleado, puerto 8085: Personal, roles y accesos.
+8. Producto, puerto 8086: Catálogo de instrumentos musicales.
+9. Inventario, puerto 8087: Control de stock disponible y reservado.
+10. Pago, puerto 8088: Procesamiento de transacciones financieras.
+11. Pedido, puerto 8089: Órdenes y compras.
+12. Proveedor, puerto 8090: Marcas y empresas distribuidoras.
+13. Sucursal, puerto 8091: Tiendas físicas.
 
-Pruebas
+
+
+
+Todas las peticiones externas se hacen a través del Gateway en http://localhost:8080
+
+
+DOCUMENTACION SWAGGER
+
+Cada microservicio expone su documentación interactiva en:
+http://localhost:{puerto}/swagger-ui.html
+
+
+EJECUCION LOCAL (SIN DOCKER)
+
+1. Clonar este repositorio.
+2. Tener un servidor MySQL corriendo en localhost:3306 con la base music_shop creada.
+3. Abrir el proyecto en IntelliJ IDEA.
+4. Iniciar primero EurekaServerApplication. Esperar a que la consola indique que está corriendo.
+5. Iniciar el ApiGatewayApplication.
+6. Iniciar el resto de los microservicios en cualquier orden.
+7. Verificar que todos se registraron correctamente en http://localhost:8761
+
+
+EJECUCION CON DOCKER (REMOTA/CONTENEDORES)
+
+Requisitos: tener Docker y Docker Compose instalados.
+
+1. Clonar este repositorio.
+2. Desde la raíz del proyecto (Music_Shop/), ejecutar el comando:
+   docker-compose up --build
+3. Esto levantará automáticamente: una instancia de MySQL, Eureka Server, API Gateway, y los 11 microservicios de negocio.
+4. Verificar el registro de servicios en http://localhost:8761
+5. Acceder a la API a través del Gateway en http://localhost:8080
+6. Para detener todo, ejecutar el comando:
+   docker-compose down
+
+
+PRUEBAS
+
+Las pruebas unitarias se ejecutan con el comando mvn test dentro de cada microservicio.
 Las pruebas de la API se pueden realizar utilizando la colección de Postman adjunta al proyecto.
+
