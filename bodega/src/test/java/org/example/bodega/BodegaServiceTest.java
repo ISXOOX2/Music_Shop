@@ -1,5 +1,6 @@
 package org.example.bodega;
 
+import org.example.bodega.client.SucursalClient;
 import org.example.bodega.dto.BodegaRequestDTO;
 import org.example.bodega.model.Bodega;
 import org.example.bodega.repository.BodegaRepository;
@@ -16,6 +17,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -25,6 +27,9 @@ class BodegaServiceTest {
     @Mock
     private BodegaRepository bodegaRepository;
 
+    @Mock
+    private SucursalClient sucursalClient;
+
     @InjectMocks
     private BodegaService bodegaService;
 
@@ -32,12 +37,14 @@ class BodegaServiceTest {
     private BodegaRequestDTO dtoTest;
 
     @BeforeEach
-    void SetUp() {
+    void setUp() {
+        bodegaTest = new Bodega();
         bodegaTest.setId(1);
         bodegaTest.setNombre("Bodega Central");
         bodegaTest.setCapacidadMaxima(1000);
         bodegaTest.setSucursalId(1);
 
+        dtoTest = new BodegaRequestDTO();
         dtoTest.setNombre("Bodega Central");
         dtoTest.setCapacidadMaxima(1000);
         dtoTest.setSucursalId(1);
@@ -47,6 +54,7 @@ class BodegaServiceTest {
     @DisplayName("Debe Crear Una Bodega Exitosamente")
     void testCrearBodegaExitoso() {
         //given
+        when(sucursalClient.existeSucursalPorId(anyInt())).thenReturn(true);
         when(bodegaRepository.save(any(Bodega.class))).thenReturn(bodegaTest);
 
         //when
@@ -58,6 +66,18 @@ class BodegaServiceTest {
         assertEquals(1000, resultado.getCapacidadMaxima());
         assertEquals(1, resultado.getSucursalId());
         verify(bodegaRepository, times(1)).save(any(Bodega.class));
+    }
+
+    @Test
+    @DisplayName("Debe rechazar la creación si la sucursal no existe")
+    void testCrearBodegaSucursalInexistente() {
+        //given
+        when(sucursalClient.existeSucursalPorId(anyInt())).thenReturn(false);
+
+        //when & then
+        assertThrows(org.springframework.web.server.ResponseStatusException.class,
+                () -> bodegaService.save(dtoTest));
+        verify(bodegaRepository, never()).save(any(Bodega.class));
     }
 
     @Test
@@ -77,7 +97,7 @@ class BodegaServiceTest {
 
     @Test
     @DisplayName("Debe retornar Optional vacío cuando bodega no existe")
-    void testOptenerBodegaPorId(){
+    void testObtenerBodegaPorId(){
         //given
         when(bodegaRepository.findById(999)).thenReturn(Optional.empty());
 
