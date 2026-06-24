@@ -1,5 +1,6 @@
 package org.example.inventario;
 
+import org.apache.http.HttpStatus;
 import org.example.inventario.client.ProductoClient;
 import org.example.inventario.client.SucursalClient;
 import org.example.inventario.dto.InventarioRequestDTO;
@@ -13,6 +14,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 
@@ -188,4 +191,55 @@ class InventarioServiceTest {
         assertEquals(30, resultado.getCantidadDisponible());
         verify(inventarioRepository, times(1)).save(any(Inventario.class));
     }
+
+    @Test
+    @DisplayName("Debe descontar stock correctamente cuando hay suficiente disponibilidad")
+    void testDescontarStock(){
+        // Given
+        Integer inventarioId = 1;
+        Integer cantidadDisponible = 50;
+        Integer CantidadADescontar = 30;
+
+        Inventario inventarioMock = new Inventario();
+        inventarioMock.setId(inventarioId);
+        inventarioMock.setCantidadDisponible(cantidadDisponible);
+        inventarioMock.setCantidadReservada(0);
+        inventarioMock.setSucursalId(1);
+        inventarioMock.setProductoId(1);
+
+        Inventario inventarioActualizado = new Inventario();
+        inventarioActualizado.setId(inventarioId);
+        inventarioActualizado.setCantidadDisponible(30);
+
+        when(inventarioRepository.findById(inventarioId)).thenReturn(Optional.of(inventarioMock));
+        when(inventarioRepository.save(any(Inventario.class))).thenReturn(inventarioActualizado);
+
+        Inventario resultado = inventarioService.descontar(inventarioId, CantidadADescontar);
+
+        assertNotNull(resultado);
+        assertEquals(30, resultado.getCantidadDisponible());
+        verify(inventarioRepository, times(1)).findById(inventarioId);
+        verify(inventarioRepository, times(1)).save(any(Inventario.class));
+    }
+
+    @Test
+    @DisplayName("Debe lanzar excepción cuando se intenta descontar más stock del disponible")
+    void testDescontarStockInsuficientre(){
+        // Given
+        Integer inventarioId = 1;
+        Inventario inventarioMock = new Inventario();
+        inventarioMock.setId(inventarioId);
+        inventarioMock.setCantidadDisponible(25);
+
+        when(inventarioRepository.findById(inventarioId)).thenReturn(Optional.of(inventarioMock));
+
+        ResponseStatusException excepcion = assertThrows(
+                ResponseStatusException.class,
+                () -> inventarioService.descontar(inventarioId, 30));
+
+        assertEquals(HttpStatus.SC_BAD_REQUEST, excepcion.getStatusCode());
+        assertTrue(excepcion.getMessage().contains("Stock insuficiente."));
+        verify(inventarioRepository, never()).save(any());
+    }
+
 }
