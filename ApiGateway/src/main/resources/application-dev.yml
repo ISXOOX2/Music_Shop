@@ -8,46 +8,89 @@ spring:
           uri: lb://bodega
           predicates:
             - Path=/api/bodegas/**
+          filters:
+            - AddRequestHeader=X-Source-Gateway, music-shop-gateway
+            - AddResponseHeader=X-Forwarded-By, music-shop-gateway
+
         - id: cliente-route
           uri: lb://cliente
           predicates:
             - Path=/api/clientes/**
+          filters:
+            - AddRequestHeader=X-Source-Gateway, music-shop-gateway
+            - AddResponseHeader=X-Forwarded-By, music-shop-gateway
+
         - id: sucursal-route
           uri: lb://sucursal
           predicates:
             - Path=/api/sucursales/**
+          filters:
+            - AddRequestHeader=X-Source-Gateway, music-shop-gateway
+            - AddResponseHeader=X-Forwarded-By, music-shop-gateway
+
         - id: descuento-route
           uri: lb://descuento
           predicates:
             - Path=/api/descuentos/**
+          filters:
+            - AddRequestHeader=X-Source-Gateway, music-shop-gateway
+            - AddResponseHeader=X-Forwarded-By, music-shop-gateway
+
         - id: proveedor-route
           uri: lb://proveedor
           predicates:
             - Path=/api/proveedores/**
+          filters:
+            - AddRequestHeader=X-Source-Gateway, music-shop-gateway
+            - AddResponseHeader=X-Forwarded-By, music-shop-gateway
+
         - id: producto-route
           uri: lb://producto
           predicates:
             - Path=/api/productos/**
+          filters:
+            - AddRequestHeader=X-Source-Gateway, music-shop-gateway
+            - AddResponseHeader=X-Forwarded-By, music-shop-gateway
+
         - id: empleado-route
           uri: lb://empleado
           predicates:
             - Path=/api/empleados/**
+          filters:
+            - AddRequestHeader=X-Source-Gateway, music-shop-gateway
+            - AddResponseHeader=X-Forwarded-By, music-shop-gateway
+
         - id: inventario-route
           uri: lb://inventario
           predicates:
             - Path=/api/inventarios/**
+          filters:
+            - AddRequestHeader=X-Source-Gateway, music-shop-gateway
+            - AddResponseHeader=X-Forwarded-By, music-shop-gateway
+
         - id: pedido-route
           uri: lb://pedido
           predicates:
             - Path=/api/pedidos/**
+          filters:
+            - AddRequestHeader=X-Source-Gateway, music-shop-gateway
+            - AddResponseHeader=X-Forwarded-By, music-shop-gateway
+
         - id: pago-route
           uri: lb://pago
           predicates:
             - Path=/api/pagos/**
+          filters:
+            - AddRequestHeader=X-Source-Gateway, music-shop-gateway
+            - AddResponseHeader=X-Forwarded-By, music-shop-gateway
+
         - id: devolucion-route
           uri: lb://devolucion
           predicates:
             - Path=/api/devoluciones/**
+          filters:
+            - AddRequestHeader=X-Source-Gateway, music-shop-gateway
+            - AddResponseHeader=X-Forwarded-By, music-shop-gateway
 
 server:
   port: 8080
