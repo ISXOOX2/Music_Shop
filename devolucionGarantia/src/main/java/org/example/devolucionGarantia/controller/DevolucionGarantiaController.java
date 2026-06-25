@@ -29,51 +29,92 @@ public class DevolucionGarantiaController {
     private DevolucionGarantiaService devolucionService;
 
     @GetMapping
-    @Operation(summary="Obtener todas las devoluciones", description="Retorna lista de todas las devoluciones")
-    @ApiResponse(responseCode="200", description="OK")
+    @Operation(summary="Obtener todas las devoluciones", description="Retorna lista de todas las solicitudes de devolución registradas")
+    @ApiResponse(responseCode="200", description="OK - Lista de devoluciones obtenida correctamente")
     public List<DevolucionGarantia> listarTodos(){
+        log.info("Obteniendo todas las devoluciones");
         return devolucionService.listarTodos();
     }
 
     @GetMapping("/{id}")
     @Operation(summary="Obtener devolución por ID", description="Retorna una devolución específica")
-    @ApiResponse(responseCode="200", description="OK")
-    @ApiResponse(responseCode="404", description="No encontrado")
-    public DevolucionGarantia obtenerPorId(@Parameter(description="ID de la devolución") @PathVariable Integer id){
+    @ApiResponse(responseCode="200", description="OK - Devolución encontrada")
+    @ApiResponse(responseCode="404", description="NO ENCONTRADO - Devolución no existe con ese ID")
+    public DevolucionGarantia obtenerPorId(
+            @Parameter(description="ID de la devolución", required=true)
+            @PathVariable Integer id){
+
+        log.info("Buscando devolución con ID: {}", id);
         return devolucionService.obtenerPorId(id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @Operation(summary="Registrar devolución", description="Registra una nueva solicitud de devolución")
-    @ApiResponse(responseCode="201", description="Creado exitosamente")
-    @ApiResponse(responseCode="400", description="Datos inválidos")
-    public DevolucionGarantia registrarSolicitud(@Valid @RequestBody DevolucionGarantiaDTO dto){
-        return devolucionService.registrarSolicitud(dto);
+    @Operation(summary="Registrar devolución", description="Registra una nueva solicitud de devolución con validación de datos")
+    @ApiResponse(responseCode="201", description="CREADO - Solicitud de devolución registrada exitosamente")
+    @ApiResponse(responseCode="400", description="DATOS INVÁLIDOS - Campos requeridos: idPedido, tipoSolicitud, motivo, idInventario, cantidad")
+    public DevolucionGarantia registrarSolicitud(
+            @Valid @RequestBody DevolucionGarantiaDTO dto){
+
+        log.info("Registrando nueva solicitud de devolución para pedido: {}", dto.getIdPedido());
+        DevolucionGarantia devolucion = devolucionService.registrarSolicitud(dto);
+        log.info("Devolución registrada con ID: {}", devolucion.getId());
+        return devolucion;
     }
 
     @PutMapping("/{id}")
-    @Operation(summary="Actualizar devolución", description="Actualiza una devolución existente")
-    @ApiResponse(responseCode="200", description="Actualizado exitosamente")
-    @ApiResponse(responseCode="404", description="No encontrado")
+    @Operation(summary="Actualizar devolución", description="Actualiza los datos de una devolución existente")
+    @ApiResponse(responseCode="200", description="OK - Actualizado exitosamente")
+    @ApiResponse(responseCode="404", description="NO ENCONTRADO - Devolución no existe con ese ID")
+    @ApiResponse(responseCode="400", description="DATOS INVÁLIDOS - Campos requeridos: tipoSolicitud, motivo, estadoResolucion")
     public ResponseEntity<DevolucionGarantia> actualizar(
-            @Parameter(description="ID de la devolución") @PathVariable Integer id,
+            @Parameter(description="ID de la devolución", required=true)
+            @PathVariable Integer id,
             @Valid @RequestBody DevolucionGarantia request) {
+
+        log.info("Actualizando devolución con ID: {}", id);
+
+        if(!devolucionService.existePorId(id)){
+            log.warn("Intento actualizar devolución inexistente: {}", id);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "Error 404: Devolución con ID " + id + " no existe");
+        }
+
         DevolucionGarantia devolucionActualizada = devolucionService.actualizar(id, request);
+        log.info("Devolución actualizada exitosamente. ID: {}", id);
         return ResponseEntity.ok(devolucionActualizada);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @Operation(summary="Eliminar devolución", description="Elimina una devolución")
-    @ApiResponse(responseCode="204", description="Eliminado exitosamente")
-    public void eliminar(@Parameter(description="ID de la devolución") @PathVariable Integer id){
+    @Operation(summary="Eliminar devolución", description="Elimina una solicitud de devolución del sistema")
+    @ApiResponse(responseCode="204", description="ELIMINADO - Devolución eliminada exitosamente")
+    @ApiResponse(responseCode="404", description="NO ENCONTRADO - Devolución no existe con ese ID")
+    public void eliminar(
+            @Parameter(description="ID de la devolución", required=true)
+            @PathVariable Integer id){
+
+        log.info("Eliminando devolución con ID: {}", id);
+
+        if(!devolucionService.existePorId(id)){
+            log.warn("Intento eliminar devolución inexistente: {}", id);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "Error 404: Devolución con ID " + id + " no existe");
+        }
+
         devolucionService.eliminar(id);
+        log.info("Devolución eliminada exitosamente. ID: {}", id);
     }
 
     @GetMapping("/exists/{id}")
-    @Operation(summary="Verificar existencia", description="Verifica si existe una devolución")
-    public ResponseEntity<Boolean> existePorId(@Parameter(description="ID de la devolución") @PathVariable Integer id) {
-        return ResponseEntity.ok(devolucionService.existePorId(id));
+    @Operation(summary="Verificar existencia", description="Verifica si existe una devolución con ese ID")
+    @ApiResponse(responseCode="200", description="OK - Retorna true o false")
+    public ResponseEntity<Boolean> existePorId(
+            @Parameter(description="ID de la devolución", required=true)
+            @PathVariable Integer id) {
+
+        log.info("Verificando existencia de devolución con ID: {}", id);
+        boolean existe = devolucionService.existePorId(id);
+        return ResponseEntity.ok(existe);
     }
 }
