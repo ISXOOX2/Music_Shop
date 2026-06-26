@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourcePerFileMappings">
+    <file url="file://$PROJECT_DIR$/inventario/src/main/resources/db/migration/V1__INIT.sql" value="83c933b3-9c44-4a92-b613-cb4d45fe4c18" />
+    <file url="file://$PROJECT_DIR$/inventario/src/main/resources/db/migration/V2__Modificacion_Inventario.sql" value="83c933b3-9c44-4a92-b613-cb4d45fe4c18" />
+  </component>
+</project>
