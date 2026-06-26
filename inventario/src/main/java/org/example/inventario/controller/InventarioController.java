@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -28,91 +29,186 @@ public class InventarioController {
     private InventarioService inventarioService;
 
     @GetMapping
-    @Operation(summary="Obtener todos los inventarios", description="Retorna lista de todos los inventarios")
-    @ApiResponse(responseCode="200", description="OK")
+    @Operation(summary="Obtener todos los inventarios", description="Retorna lista de todos los inventarios registrados")
+    @ApiResponse(responseCode="200", description="OK - Lista de inventarios obtenida correctamente")
     public List<Inventario> listarTodos(){
+        log.info("Obteniendo todos los inventarios");
         return inventarioService.listarTodos();
     }
 
     @GetMapping("/{id}")
     @Operation(summary="Obtener inventario por ID", description="Retorna un inventario específico")
-    @ApiResponse(responseCode="200", description="OK")
-    @ApiResponse(responseCode="404", description="No encontrado")
-    public Inventario obtenerPorId(@Parameter(description="ID del inventario") @PathVariable Integer id){
+    @ApiResponse(responseCode="200", description="OK - Inventario encontrado")
+    @ApiResponse(responseCode="404", description="NO ENCONTRADO - Inventario no existe con ese ID")
+    public Inventario obtenerPorId(
+            @Parameter(description="ID del inventario", required=true)
+            @PathVariable Integer id){
+
+        log.info("Buscando inventario con ID: {}", id);
         return inventarioService.obtenerPorId(id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @Operation(summary="Crear inventario", description="Crea un nuevo inventario")
-    @ApiResponse(responseCode="201", description="Creado exitosamente")
-    @ApiResponse(responseCode="400", description="Datos inválidos")
-    public Inventario crear(@Valid @RequestBody InventarioRequestDTO dto){
-        return inventarioService.crear(dto);
+    @Operation(summary="Crear inventario", description="Crea un nuevo inventario con validación de datos")
+    @ApiResponse(responseCode="201", description="CREADO - Inventario creado exitosamente")
+    @ApiResponse(responseCode="400", description="DATOS INVÁLIDOS - Campos requeridos: productoId, bodegaId, cantidad")
+    public Inventario crear(
+            @Valid @RequestBody InventarioRequestDTO dto){
+
+        log.info("Creando nuevo inventario para producto: {}", dto.getProductoId());
+        Inventario inventario = inventarioService.crear(dto);
+        log.info("Inventario creado con ID: {}", inventario.getId());
+        return inventario;
     }
 
     @PutMapping("/reducir/{id}")
     @Operation(summary="Reducir stock", description="Reduce la cantidad disponible de stock")
-    @ApiResponse(responseCode="200", description="Actualizado exitosamente")
+    @ApiResponse(responseCode="200", description="OK - Stock reducido exitosamente")
+    @ApiResponse(responseCode="404", description="NO ENCONTRADO - Inventario no existe")
+    @ApiResponse(responseCode="400", description="OPERACIÓN INVÁLIDA - Stock insuficiente para reducir")
     public ResponseEntity<Inventario> reducirStock(
-            @Parameter(description="ID del inventario") @PathVariable Integer id,
-            @Parameter(description="Cantidad a reducir") @RequestParam Integer cantidad) {
+            @Parameter(description="ID del inventario", required=true)
+            @PathVariable Integer id,
+            @Parameter(description="Cantidad a reducir", required=true)
+            @RequestParam Integer cantidad) {
+
+        log.info("Reduciendo stock en inventario ID: {} - Cantidad: {}", id, cantidad);
+
+        if(!inventarioService.existePorId(id)){
+            log.warn("Intento reducir stock en inventario inexistente: {}", id);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "Error 404: Inventario con ID " + id + " no existe");
+        }
+
         Inventario actualizado = inventarioService.reducirStock(id, cantidad);
+        log.info("Stock reducido exitosamente en inventario ID: {}", id);
         return ResponseEntity.ok(actualizado);
     }
 
     @PutMapping("/aumentar/{id}")
     @Operation(summary="Aumentar stock", description="Aumenta la cantidad disponible de stock")
-    @ApiResponse(responseCode="200", description="Actualizado exitosamente")
+    @ApiResponse(responseCode="200", description="OK - Stock aumentado exitosamente")
+    @ApiResponse(responseCode="404", description="NO ENCONTRADO - Inventario no existe")
     public ResponseEntity<Inventario> aumentarStock(
-            @Parameter(description="ID del inventario") @PathVariable Integer id,
-            @Parameter(description="Cantidad a aumentar") @RequestParam Integer cantidad) {
+            @Parameter(description="ID del inventario", required=true)
+            @PathVariable Integer id,
+            @Parameter(description="Cantidad a aumentar", required=true)
+            @RequestParam Integer cantidad) {
+
+        log.info("Aumentando stock en inventario ID: {} - Cantidad: {}", id, cantidad);
+
+        if(!inventarioService.existePorId(id)){
+            log.warn("Intento aumentar stock en inventario inexistente: {}", id);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "Error 404: Inventario con ID " + id + " no existe");
+        }
+
         Inventario actualizado = inventarioService.aumentarStock(id, cantidad);
+        log.info("Stock aumentado exitosamente en inventario ID: {}", id);
         return ResponseEntity.ok(actualizado);
     }
 
     @PutMapping("/reservar/{id}")
     @Operation(summary="Reservar stock", description="Mueve cantidad de disponible a reservada")
-    @ApiResponse(responseCode="200", description="Reservado exitosamente")
-    @ApiResponse(responseCode="400", description="Stock disponible insuficiente")
+    @ApiResponse(responseCode="200", description="OK - Stock reservado exitosamente")
+    @ApiResponse(responseCode="404", description="NO ENCONTRADO - Inventario no existe")
+    @ApiResponse(responseCode="400", description="OPERACIÓN INVÁLIDA - Stock disponible insuficiente")
     public ResponseEntity<Inventario> reservar(
-            @Parameter(description="ID del inventario") @PathVariable Integer id,
-            @Parameter(description="Cantidad a reservar") @RequestParam Integer cantidad) {
+            @Parameter(description="ID del inventario", required=true)
+            @PathVariable Integer id,
+            @Parameter(description="Cantidad a reservar", required=true)
+            @RequestParam Integer cantidad) {
+
+        log.info("Reservando stock en inventario ID: {} - Cantidad: {}", id, cantidad);
+
+        if(!inventarioService.existePorId(id)){
+            log.warn("Intento reservar stock en inventario inexistente: {}", id);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "Error 404: Inventario con ID " + id + " no existe");
+        }
+
         Inventario actualizado = inventarioService.reservar(id, cantidad);
+        log.info("Stock reservado exitosamente en inventario ID: {}", id);
         return ResponseEntity.ok(actualizado);
     }
 
     @PutMapping("/revertir/{id}")
     @Operation(summary="Revertir reserva", description="Mueve cantidad de reservada de vuelta a disponible")
-    @ApiResponse(responseCode="200", description="Revertido exitosamente")
-    @ApiResponse(responseCode="400", description="Cantidad a revertir excede lo reservado")
+    @ApiResponse(responseCode="200", description="OK - Reserva revertida exitosamente")
+    @ApiResponse(responseCode="404", description="NO ENCONTRADO - Inventario no existe")
+    @ApiResponse(responseCode="400", description="OPERACIÓN INVÁLIDA - Cantidad a revertir excede lo reservado")
     public ResponseEntity<Inventario> revertirReserva(
-            @Parameter(description="ID del inventario") @PathVariable Integer id,
-            @Parameter(description="Cantidad a revertir") @RequestParam Integer cantidad) {
+            @Parameter(description="ID del inventario", required=true)
+            @PathVariable Integer id,
+            @Parameter(description="Cantidad a revertir", required=true)
+            @RequestParam Integer cantidad) {
+
+        log.info("Revirtiendo reserva en inventario ID: {} - Cantidad: {}", id, cantidad);
+
+        if(!inventarioService.existePorId(id)){
+            log.warn("Intento revertir reserva en inventario inexistente: {}", id);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "Error 404: Inventario con ID " + id + " no existe");
+        }
+
         Inventario actualizado = inventarioService.revertirReserva(id, cantidad);
+        log.info("Reserva revertida exitosamente en inventario ID: {}", id);
         return ResponseEntity.ok(actualizado);
     }
 
     @GetMapping("/verificar/{id}")
-    @Operation(summary="Verificar stock disponible", description="Verifica si hay suficiente cantidadDisponible")
-    @ApiResponse(responseCode="200", description="OK")
+    @Operation(summary="Verificar stock disponible", description="Verifica si hay suficiente cantidad disponible")
+    @ApiResponse(responseCode="200", description="OK - Retorna true o false")
+    @ApiResponse(responseCode="404", description="NO ENCONTRADO - Inventario no existe")
     public ResponseEntity<Boolean> verificarStock(
-            @Parameter(description="ID del inventario") @PathVariable Integer id,
-            @Parameter(description="Cantidad solicitada") @RequestParam Integer cantidad) {
-        return ResponseEntity.ok(inventarioService.verificarStock(id, cantidad));
+            @Parameter(description="ID del inventario", required=true)
+            @PathVariable Integer id,
+            @Parameter(description="Cantidad solicitada", required=true)
+            @RequestParam Integer cantidad) {
+
+        log.info("Verificando stock en inventario ID: {} - Cantidad requerida: {}", id, cantidad);
+
+        if(!inventarioService.existePorId(id)){
+            log.warn("Intento verificar stock en inventario inexistente: {}", id);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "Error 404: Inventario con ID " + id + " no existe");
+        }
+
+        boolean tieneStock = inventarioService.verificarStock(id, cantidad);
+        return ResponseEntity.ok(tieneStock);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @Operation(summary="Eliminar inventario", description="Elimina un inventario")
-    @ApiResponse(responseCode="204", description="Eliminado exitosamente")
-    public void eliminar(@Parameter(description="ID del inventario") @PathVariable Integer id){
+    @Operation(summary="Eliminar inventario", description="Elimina un inventario del sistema")
+    @ApiResponse(responseCode="204", description="ELIMINADO - Inventario eliminado exitosamente")
+    @ApiResponse(responseCode="404", description="NO ENCONTRADO - Inventario no existe con ese ID")
+    public void eliminar(
+            @Parameter(description="ID del inventario", required=true)
+            @PathVariable Integer id){
+
+        log.info("Eliminando inventario con ID: {}", id);
+
+        if(!inventarioService.existePorId(id)){
+            log.warn("Intento eliminar inventario inexistente: {}", id);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "Error 404: Inventario con ID " + id + " no existe");
+        }
+
         inventarioService.eliminar(id);
+        log.info("Inventario eliminado exitosamente. ID: {}", id);
     }
 
     @GetMapping("/exists/{id}")
-    @Operation(summary="Verificar existencia", description="Verifica si existe un inventario")
-    public ResponseEntity<Boolean> existePorId(@Parameter(description="ID del inventario") @PathVariable Integer id) {
-        return ResponseEntity.ok(inventarioService.existePorId(id));
+    @Operation(summary="Verificar existencia", description="Verifica si existe un inventario con ese ID")
+    @ApiResponse(responseCode="200", description="OK - Retorna true o false")
+    public ResponseEntity<Boolean> existePorId(
+            @Parameter(description="ID del inventario", required=true)
+            @PathVariable Integer id) {
+
+        log.info("Verificando existencia de inventario con ID: {}", id);
+        boolean existe = inventarioService.existePorId(id);
+        return ResponseEntity.ok(existe);
     }
 }
