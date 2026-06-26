@@ -41,7 +41,7 @@ class InventarioServiceTest {
 
     @BeforeEach
     void setUp() {
-        // Given - Preparar datos de prueba
+
         inventarioTest = new Inventario();
         inventarioTest.setId(1);
         inventarioTest.setProductoId(100);
