@@ -41,14 +41,14 @@ docker-compose down -v
 
 Accede a la documentación interactiva en cada microservicio:
 
-http://localhost:[PUERTO]/swagger-ui.html
+http://localhost:[PUERTO]/swagger-ui/index.html
 
 ### URLs por Microservicio:
-- Producto: http://localhost:8086/swagger-ui.html
-- Pedido: http://localhost:8089/swagger-ui.html
-- Pago: http://localhost:8088/swagger-ui.html
-- Inventario: http://localhost:8087/swagger-ui.html
-- API Gateway: http://localhost:8080/swagger-ui.html
+- Producto: http://localhost:8086/swagger-ui/index.html
+- Pedido: http://localhost:8089/swagger-ui/index.html
+- Pago: http://localhost:8088/swagger-ui/index.html
+- Inventario: http://localhost:8087/swagger-ui/index.html
+- API Gateway: http://localhost:8080/swagger-ui/index.html
 - (Todas las demás en puertos 8081-8091)
 
 ### Pruebas en Swagger:
