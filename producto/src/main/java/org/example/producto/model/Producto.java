@@ -30,5 +30,15 @@ public class Producto {
     @Column(name = "precio", nullable = false)
     private Integer precio;
 
+    @Size(max = 500)
+    @Column(name = "descripcion", length = 500)
+    private String descripcion;
 
+    @Size(max = 100)
+    @Column(name = "categoria", length = 100)
+    private String categoria;
+
+    @Size(max = 100)
+    @Column(name = "marca", length = 100)
+    private String marca;
 }

@@ -20,4 +20,13 @@ public class ProductoRequestDTO {
     @NotNull(message = "El precio es obligatorio")
     @Min(value = 1, message = "El precio debe ser mayor a 0")
     private Integer precio;
+
+    @Size(max = 500, message = "La descripción no puede exceder los 500 caracteres")
+    private String descripcion;
+
+    @Size(max = 100, message = "La categoría no puede exceder los 100 caracteres")
+    private String categoria;
+
+    @Size(max = 100, message = "La marca no puede exceder los 100 caracteres")
+    private String marca;
 }
